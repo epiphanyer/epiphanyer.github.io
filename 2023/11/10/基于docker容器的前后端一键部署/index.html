@@ -20,30 +20,33 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="HelloWorldMan">
-<meta property="og:type" content="website">
-<meta property="og:title" content="ZpZeng&#39;s Blog">
-<meta property="og:url" content="http://example.com/index.html">
+  <meta name="description" content="基于docker容器进行服务器一键部署[TOC] 项目目录结构1234567891011121314151617--rbac_admin (总目录)	--RBAC-server 后端项目文件夹(基于springboot)		--...(springboot项目文件)			注意：pom.xml中配置&lt;repositories&gt;仓库镜像、以及&lt;build&gt;下的&lt;filen">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基于docker容器的前后端一键部署">
+<meta property="og:url" content="http://example.com/2023/11/10/%E5%9F%BA%E4%BA%8Edocker%E5%AE%B9%E5%99%A8%E7%9A%84%E5%89%8D%E5%90%8E%E7%AB%AF%E4%B8%80%E9%94%AE%E9%83%A8%E7%BD%B2/index.html">
 <meta property="og:site_name" content="ZpZeng&#39;s Blog">
-<meta property="og:description" content="HelloWorldMan">
+<meta property="og:description" content="基于docker容器进行服务器一键部署[TOC] 项目目录结构1234567891011121314151617--rbac_admin (总目录)	--RBAC-server 后端项目文件夹(基于springboot)		--...(springboot项目文件)			注意：pom.xml中配置&lt;repositories&gt;仓库镜像、以及&lt;build&gt;下的&lt;filen">
 <meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-11-10T07:17:04.000Z">
+<meta property="article:modified_time" content="2023-11-10T07:17:04.345Z">
 <meta property="article:author" content="Zp Zeng">
+<meta property="article:tag" content="docker 部署">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://example.com/">
+<link rel="canonical" href="http://example.com/2023/11/10/%E5%9F%BA%E4%BA%8Edocker%E5%AE%B9%E5%99%A8%E7%9A%84%E5%89%8D%E5%90%8E%E7%AB%AF%E4%B8%80%E9%94%AE%E9%83%A8%E7%BD%B2/">
 
 
 <script id="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome : true,
-    isPost : false,
+    isHome : false,
+    isPost : true,
     lang   : 'zh-CN'
   };
 </script>
 
-  <title>ZpZeng's Blog</title>
+  <title>基于docker容器的前后端一键部署 | ZpZeng's Blog</title>
   
 
 
@@ -166,9 +169,10 @@
         <div class="content-wrap">
           
 
-          <div class="content index posts-expand">
+          <div class="content post posts-expand">
             
-      
+
+    
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
@@ -184,10 +188,9 @@
       <meta itemprop="name" content="ZpZeng's Blog">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/11/10/%E5%9F%BA%E4%BA%8Edocker%E5%AE%B9%E5%99%A8%E7%9A%84%E5%89%8D%E5%90%8E%E7%AB%AF%E4%B8%80%E9%94%AE%E9%83%A8%E7%BD%B2/" class="post-title-link" itemprop="url">基于docker容器的前后端一键部署</a>
-        </h2>
+        <h1 class="post-title" itemprop="name headline">
+          基于docker容器的前后端一键部署
+        </h1>
 
         <div class="post-meta">
             <span class="post-meta-item">
@@ -219,7 +222,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="基于docker容器进行服务器一键部署"><a href="#基于docker容器进行服务器一键部署" class="headerlink" title="基于docker容器进行服务器一键部署"></a>基于docker容器进行服务器一键部署</h1><p>[TOC]</p>
+        <h1 id="基于docker容器进行服务器一键部署"><a href="#基于docker容器进行服务器一键部署" class="headerlink" title="基于docker容器进行服务器一键部署"></a>基于docker容器进行服务器一键部署</h1><p>[TOC]</p>
 <h2 id="项目目录结构"><a href="#项目目录结构" class="headerlink" title="项目目录结构"></a>项目目录结构</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">--rbac_admin (总目录)</span><br><span class="line">	--RBAC-server 后端项目文件夹(基于springboot)</span><br><span class="line">		--...(springboot项目文件)</span><br><span class="line">			注意：pom.xml中配置&lt;repositories&gt;仓库镜像、以及&lt;build&gt;下的&lt;filename&gt;maven编译的jar包名</span><br><span class="line">				/src/main/resources/application.yaml配置中不需要配置数据库源，在docker-compose中配置</span><br><span class="line">		--Dockerfile  docker后端容器镜像配置——Java运行时环境+后端jar包</span><br><span class="line">	--RBAC-web  前端项目文件夹(基于vue)</span><br><span class="line">		--...(vue项目文件)</span><br><span class="line">		--.npmrc 用于配置npm下载包的仓库镜像</span><br><span class="line">		--nginx.conf 用于配置nginx容器: 监听端口、反向代理</span><br><span class="line">		--Dockerfile docker前端容器镜像配置</span><br><span class="line">			——node运行环境+npm run build vue项目 ; =&gt; 生成一个html静态文件</span><br><span class="line">			——nginx镜像，导入了上述html静态文件以及nginx.conf</span><br><span class="line">	--sql  </span><br><span class="line">		--RBAC_database_init.sql 数据库初始化配置文件</span><br><span class="line">	--docker-compose.yml   docker-compose配置文件，运行多容器服务</span><br><span class="line">	--deploy.sh    bash文件，用于服务器自动化部署</span><br></pre></td></tr></table></figure>
 
 
@@ -250,21 +253,26 @@
 <h3 id="docker-compose-yml配置文件"><a href="#docker-compose-yml配置文件" class="headerlink" title="docker-compose.yml配置文件"></a>docker-compose.yml配置文件</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br></pre></td><td class="code"><pre><span class="line">version: &quot;3.4&quot;</span><br><span class="line"></span><br><span class="line">services:</span><br><span class="line">  mysql:</span><br><span class="line">    container_name: rbac-mysql</span><br><span class="line">    image: mysql:8</span><br><span class="line">    ## 使用docker-hub提供的镜像构建数据库容器</span><br><span class="line">    restart: unless-stopped</span><br><span class="line">    tty: true</span><br><span class="line">    ports:</span><br><span class="line">      - &quot;3306:3306&quot;</span><br><span class="line">    environment:</span><br><span class="line">      MYSQL_DATABASE: $&#123;MYSQL_DATABASE:-root&#125;</span><br><span class="line">      MYSQL_ROOT_PASSWORD: $&#123;MYSQL_ROOT_PASSWORD:-zzp123456&#125;</span><br><span class="line">      ## 利用环境变量设置数据库的用户名和密码</span><br><span class="line">    volumes:</span><br><span class="line">      - mysql:/var/lib/mysql/</span><br><span class="line">      - ./sql/RABC_database_init.sql:/docker-entrypoint-initdb.d/ssadmin_init.sql:ro</span><br><span class="line">      ## 将数据库挂载到宿主机，并且把sql初始化文件挂载到数据库容器的初始化目录下</span><br><span class="line">  </span><br><span class="line">  redis:</span><br><span class="line">    container_name: rbac-redis</span><br><span class="line">    image: redis:6-alpine</span><br><span class="line">    restart: unless-stopped</span><br><span class="line">    ports:</span><br><span class="line">      - &quot;6379:6379&quot;</span><br><span class="line">    volumes:</span><br><span class="line">      - redis:/data</span><br><span class="line"></span><br><span class="line">  server:</span><br><span class="line">    container_name: rbac-server</span><br><span class="line">    build:</span><br><span class="line">      context: ./RBAC-server/</span><br><span class="line">      ## 利用build使用Dockerfile文件构建镜像</span><br><span class="line">    image: rbac-server</span><br><span class="line">    ## 为构建的镜像命名，不能有大写字母</span><br><span class="line">    restart: unless-stopped</span><br><span class="line">    ports:</span><br><span class="line">      - &quot;28080:28080&quot;</span><br><span class="line">    environment:</span><br><span class="line">      SPRING_PROFILES_ACTIVE: local</span><br><span class="line">      JAVA_OPTS:</span><br><span class="line">        $&#123;JAVA_OPTS:-</span><br><span class="line">          -Xms512m</span><br><span class="line">          -Xmx512m</span><br><span class="line">          -Djava.security.egd=file:/dev/./urandom</span><br><span class="line">        &#125;</span><br><span class="line">      ARGS:</span><br><span class="line">        --spring.datasource.url=$&#123;DATASOURCE_URL:-jdbc:mysql://rbac-mysql:3306/RABC_database?useSSL=false&amp;serverTimezone=Asia/Shanghai&amp;allowPublicKeyRetrieval=true&amp;nullCatalogMeansCurrent=true&#125;</span><br><span class="line">        --spring.datasource.username=$&#123;DATASOURCE_USERNAME:-root&#125;</span><br><span class="line">        --spring.datasource.password=$&#123;DATASOURCE_PASSWORD:-zzp123456&#125;</span><br><span class="line">        --spring.redis.host=$&#123;REDIS_HOST:-rbac-redis&#125;</span><br><span class="line">        ## 启动容器时利用环境变量传入参数，连接数据库源(和Dockerfile中对应)</span><br><span class="line">        ## 这些参数在Dockerfile中也被定义</span><br><span class="line">    depends_on:</span><br><span class="line">    ## 依赖的容器</span><br><span class="line">      - mysql</span><br><span class="line">      - redis</span><br><span class="line"></span><br><span class="line">  web:</span><br><span class="line">    container_name: rbac-web</span><br><span class="line">    build:</span><br><span class="line">      context: ./RBAC-web</span><br><span class="line">      args:</span><br><span class="line">        NODE_ENV:</span><br><span class="line">          ENV=$&#123;NODE_ENV:-production&#125;</span><br><span class="line">          VUE_APP_TITLE=$&#123;VUE_APP_TITLE:-RBAC管理系统&#125;</span><br><span class="line">    image: rbac-web</span><br><span class="line">    restart: unless-stopped</span><br><span class="line">    ports:</span><br><span class="line">      - &quot;80:80&quot;</span><br><span class="line">    depends_on:</span><br><span class="line">      - server</span><br><span class="line"></span><br><span class="line">volumes:</span><br><span class="line">  mysql:</span><br><span class="line">    driver: local</span><br><span class="line">  redis:</span><br><span class="line">    driver: local</span><br></pre></td></tr></table></figure>
 
 
-      
     </div>
 
     
     
     
+
       <footer class="post-footer">
-        <div class="post-eof"></div>
+          <div class="post-tags">
+              <a href="/tags/docker-%E9%83%A8%E7%BD%B2/" rel="tag"># docker 部署</a>
+          </div>
+
+        
+
+
+        
       </footer>
+    
   </article>
   
   
-  
-
-
   
 
 
@@ -317,6 +325,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8Edocker%E5%AE%B9%E5%99%A8%E8%BF%9B%E8%A1%8C%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B8%80%E9%94%AE%E9%83%A8%E7%BD%B2"><span class="nav-number">1.</span> <span class="nav-text">基于docker容器进行服务器一键部署</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A1%B9%E7%9B%AE%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84"><span class="nav-number">1.1.</span> <span class="nav-text">项目目录结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0%E4%B8%80%E9%94%AE%E9%83%A8%E7%BD%B2%E7%9A%84bash%E8%84%9A%E6%9C%AC%E2%80%94%E2%80%94deploy-sh"><span class="nav-number">1.2.</span> <span class="nav-text">实现一键部署的bash脚本——deploy.sh</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#bash%E8%84%9A%E6%9C%AC%E5%9F%BA%E7%A1%80%E8%AE%BE%E7%BD%AE"><span class="nav-number">1.2.1.</span> <span class="nav-text">bash脚本基础设置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A3%80%E6%9F%A5docker%E6%98%AF%E5%90%A6%E5%AE%89%E8%A3%85"><span class="nav-number">1.2.2.</span> <span class="nav-text">检查docker是否安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BAmaven%E7%BC%93%E5%AD%98%E7%9A%84docker-volume"><span class="nav-number">1.2.3.</span> <span class="nav-text">创建maven缓存的docker volume</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%9A%E8%BF%87%E5%AE%B9%E5%99%A8%E6%9E%84%E5%BB%BAjar%E5%8C%85-springboot%E9%A1%B9%E7%9B%AE%E7%9A%84%E5%8F%AF%E8%BF%90%E8%A1%8Cjar%E5%8C%85"><span class="nav-number">1.2.4.</span> <span class="nav-text">通过容器构建jar包(springboot项目的可运行jar包)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#docker-compose-build-%E6%9E%84%E5%BB%BA%E9%95%9C%E5%83%8F"><span class="nav-number">1.2.5.</span> <span class="nav-text">docker-compose build 构建镜像</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A3%80%E6%9F%A5%E6%98%AF%E5%90%A6%E6%9C%89%E6%AD%A3%E5%9C%A8%E8%BF%90%E8%A1%8C%E7%9A%84docker-compose%E6%9C%8D%E5%8A%A1"><span class="nav-number">1.2.6.</span> <span class="nav-text">检查是否有正在运行的docker-compose服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#docker-compose%E5%90%AF%E5%8A%A8%E5%A4%9A%E5%AE%B9%E5%99%A8%E6%9C%8D%E5%8A%A1"><span class="nav-number">1.2.7.</span> <span class="nav-text">docker-compose启动多容器服务</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Docker%E5%AE%B9%E5%99%A8%E5%8F%8A%E9%95%9C%E5%83%8F%E9%85%8D%E7%BD%AE"><span class="nav-number">1.3.</span> <span class="nav-text">Docker容器及镜像配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%8E%E7%AB%AF%E5%AE%B9%E5%99%A8%E9%95%9C%E5%83%8F%E9%85%8D%E7%BD%AE%E2%80%94%E2%80%94Dockerfile"><span class="nav-number">1.3.1.</span> <span class="nav-text">后端容器镜像配置——Dockerfile</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%89%8D%E7%AB%AF%E5%AE%B9%E5%99%A8%E9%95%9C%E5%83%8F%E9%85%8D%E7%BD%AE%E2%80%94%E2%80%94Dockerfile"><span class="nav-number">1.3.2.</span> <span class="nav-text">前端容器镜像配置——Dockerfile</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%89%8D%E7%AB%AFnginx%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="nav-number">1.3.3.</span> <span class="nav-text">前端nginx配置文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#docker-compose-yml%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="nav-number">1.3.4.</span> <span class="nav-text">docker-compose.yml配置文件</span></a></li></ol></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
