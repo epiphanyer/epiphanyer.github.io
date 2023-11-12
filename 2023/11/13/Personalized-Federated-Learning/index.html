@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.hackerzzp.top","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="Towards Personalized Federated LearningIntroductionCategorization of  FL HFL: participants share the same feature space but have different data samples VFL: participants have overlapping data samples">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Personalized Federated Learning">
+<meta property="og:url" content="http://www.hackerzzp.top/2023/11/13/Personalized-Federated-Learning/index.html">
+<meta property="og:site_name" content="ZpZeng&#39;s Blog">
+<meta property="og:description" content="Towards Personalized Federated LearningIntroductionCategorization of  FL HFL: participants share the same feature space but have different data samples VFL: participants have overlapping data samples">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-11-12T16:34:15.000Z">
+<meta property="article:modified_time" content="2023-11-12T16:34:15.606Z">
+<meta property="article:author" content="Zp Zeng">
+<meta property="article:tag" content="联邦学习">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://www.hackerzzp.top/2023/11/13/Personalized-Federated-Learning/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Personalized Federated Learning | ZpZeng's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">ZpZeng's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-schedule">
+
+    <a href="/schedule/" rel="section"><i class="fa fa-calendar fa-fw"></i>日程表</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.hackerzzp.top/2023/11/13/Personalized-Federated-Learning/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gips2.baidu.com/it/u=3498797510,1741357035&fm=3039&app=3039&f=JPEG?w=1024&h=1024">
+      <meta itemprop="name" content="Zp Zeng">
+      <meta itemprop="description" content="HelloWorldMan">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ZpZeng's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Personalized Federated Learning
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-11-13 00:34:15" itemprop="dateCreated datePublished" datetime="2023-11-13T00:34:15+08:00">2023-11-13</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/AI/" itemprop="url" rel="index"><span itemprop="name">AI</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Towards-Personalized-Federated-Learning"><a href="#Towards-Personalized-Federated-Learning" class="headerlink" title="Towards Personalized Federated Learning"></a>Towards Personalized Federated Learning</h1><h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><h3 id="Categorization-of-FL"><a href="#Categorization-of-FL" class="headerlink" title="Categorization of  FL"></a>Categorization of  FL</h3><ol>
+<li>HFL: participants share the same feature space but have different data samples</li>
+<li>VFL: participants have overlapping data samples but differ in the feature space</li>
+<li>FTL: participants have little overlap in both the feature space and the sample space</li>
+</ol>
+<h3 id="Motivation-for-Personalized-Federated-Learning"><a href="#Motivation-for-Personalized-Federated-Learning" class="headerlink" title="Motivation for Personalized Federated Learning"></a>Motivation for Personalized Federated Learning</h3><p>To solve two challenges:</p>
+<ol>
+<li>poor convergence on highly heterogeneous data</li>
+</ol>
+<ul>
+<li>client drift on non-IID data</li>
+<li>![](D:\myblog\pictures\Personalized Federated Learning\PFL_clientDrift.png)</li>
+</ul>
+<ol start="2">
+<li>lack of solution personalization</li>
+</ol>
+<ul>
+<li>the single-globally shared model will not generalize well for a local distribution that is very different from the global distribution</li>
+</ul>
+<h2 id="Strategies-for-personalized-federated-learning"><a href="#Strategies-for-personalized-federated-learning" class="headerlink" title="Strategies for personalized federated learning"></a>Strategies for personalized federated learning</h2><h3 id="Strategy-Ⅰ-Global-Model-Personalization"><a href="#Strategy-Ⅰ-Global-Model-Personalization" class="headerlink" title="Strategy Ⅰ : Global Model Personalization"></a>Strategy Ⅰ : Global Model Personalization</h3><p>FL training + local adaption</p>
+<ol>
+<li>follows the general FL training procedure to train a single-global FL model</li>
+<li>personalized through a local adaption involves additional training on each local dataset</li>
+</ol>
+<p>personalization performance directly depends on the generalization performance of global model</p>
+<p>Personalization techniques</p>
+<ol>
+<li>data-based approaches</li>
+</ol>
+<ul>
+<li>reduce the statistical heterogeneity among the clients’ datasets</li>
+</ul>
+<ol start="2">
+<li>model-based approaches</li>
+</ol>
+<ul>
+<li>learn a strong global model for future personalization on individual clients</li>
+</ul>
+<h3 id="Strategy-Ⅱ-Learning-Personalized-Models"><a href="#Strategy-Ⅱ-Learning-Personalized-Models" class="headerlink" title="Strategy Ⅱ : Learning Personalized Models"></a>Strategy Ⅱ : Learning Personalized Models</h3><p>to build personalized models by modifying the FL model aggregation process</p>
+<p>Personalized techniques</p>
+<ol>
+<li>architecture-based approaches</li>
+</ol>
+<ul>
+<li>provide a personalized model architecture tailored to each client</li>
+</ul>
+<ol start="2">
+<li>similarity-based approaches<ul>
+<li>leverage client relationships to improve personalized model performance where similar personalized models are built for related clients.</li>
+</ul>
+</li>
+</ol>
+<p>the optimization objective is formulated differently from the vanilla FL setting</p>
+<h2 id="Strategy-Ⅰ-Global-Model-Personalization-1"><a href="#Strategy-Ⅰ-Global-Model-Personalization-1" class="headerlink" title="Strategy Ⅰ:   Global Model Personalization"></a>Strategy Ⅰ:   Global Model Personalization</h2><h3 id="Data-Based-Approaches"><a href="#Data-Based-Approaches" class="headerlink" title="Data-Based Approaches"></a>Data-Based Approaches</h3><ol>
+<li>Data Augmentation<ul>
+<li>data sharing: distributes a small amount of global data balanced by classes to each client</li>
+<li>FAug: training a GAN in FL server with some data samples of the minority classes</li>
+<li>self-balancing FL: The FL server requires statistical information about clients’ local data distributions</li>
+<li>FedHome: trains a generative convolutional autoencoder (GCAE) model.</li>
+</ul>
+</li>
+<li>Client Selection<ul>
+<li>FAVOR: selects a subset of participating clients for each training round in order to mitigate the bias introduced by non-IID data</li>
+<li>tier-based FL system (TiFL): groups clients into tiers based on training performance, adaptively selects participating clients from the same tier for each training round</li>
+<li>FedSAE: a self-adaptive FL system that adaptively selects clients with larger local training loss</li>
+</ul>
+</li>
+</ol>
+<p>need to modify the local data distributions, which may result in the loss of valuable information associated with the inherent diversity of client behaviors.</p>
+<h3 id="Model-Based-Approaches"><a href="#Model-Based-Approaches" class="headerlink" title="Model-Based  Approaches"></a>Model-Based  Approaches</h3><ol>
+<li><p>Regularized Local Loss:<br>$$<br>\min_{\theta \in \mathbb{R}^d} h_c(\theta ; \omega) \coloneqq f_c(\theta) + l_{reg}(\theta; \omega)<br>$$</p>
+</li>
+<li><p>Between Global and Local Models</p>
+<ul>
+<li>FedProx: introduced a proximal term to the local subproblem which considers the dissimilarity between the global FL model and local models to adjust the impact of local updates</li>
+<li>FedCL: estimate the importance of the weights to the global model, penalization steps are carried out to prevent important parameters of the global model from being changed when adapting the global model to clients’ local data.</li>
+<li>SCAFFOLD: uses variance reduction to alleviate the effect of client drifting,</li>
+</ul>
+</li>
+<li><p>Between Historical Local Model Snapshots</p>
+<ul>
+<li><p>MOON: reduce the distance between the representations learned by the local models and the global model (i.e., to alleviate weight divergence), increase the distance between the representations learned between a given local model and its previous local model (i.e., to speed up convergence).</p>
+</li>
+<li><p>Meta-learning(Per-FedAvg):<br>$$<br>\min_{\omega \in \mathbb{R}^b} F(\omega) \coloneqq \frac{1}{C} \sum_{c&#x3D;1}^{C} f_c(\omega - \alpha \nabla f_c(\omega))<br>$$<br>the new goal is transformed to learn a good initial global model that performs well on a new heterogeneous task after it is updated with a few steps of gradient descent</p>
+</li>
+<li><p>Transfer learning: TL is first carried out using a model pretrained on a public dataset. Each client then fine-tunes this model on its private data.  </p>
+<p>improves personalization by reducing the domain discrepancy between the global and local models.</p>
+</li>
+</ul>
+</li>
+</ol>
+<h3 id="Summary-of-Personalization-Techniques-in-Global-Model-Personalization"><a href="#Summary-of-Personalization-Techniques-in-Global-Model-Personalization" class="headerlink" title="Summary of Personalization Techniques in Global Model Personalization"></a>Summary of Personalization Techniques in Global Model Personalization</h3><p>![](D:\myblog\pictures\Personalized Federated Learning\summary of personalization techniques in Global Model Personalization .png)</p>
+<h2 id="Strategy-II-Learning-Personalized-Models"><a href="#Strategy-II-Learning-Personalized-Models" class="headerlink" title="Strategy II: Learning Personalized Models"></a>Strategy II: Learning Personalized Models</h2><h3 id="Architecture-Based-Approaches"><a href="#Architecture-Based-Approaches" class="headerlink" title="Architecture-Based Approaches"></a>Architecture-Based Approaches</h3><ol>
+<li>Parameter Decoupling<ul>
+<li>decoupling the local private model parameters from the global FL model parameters. Private parameters are trained locally on the clients and not shared with the FL server</li>
+<li>a “base layers + personalized layers” design</li>
+<li>personalized feature representations for each client</li>
+</ul>
+</li>
+<li>Knowledge Distillation<ul>
+<li>Knowledge is commonly represented as class scores or logit outputs in existing FL distillation approaches.</li>
+<li>FedMD: <ul>
+<li>Learning occurs through a consensus computed using the average class scores on a public dataset.</li>
+<li>each client trains its model using the public dataset based on the updated consensus and fine-tunes its model on its private dataset thereafter</li>
+</ul>
+</li>
+<li>FedGen:</li>
+<li>A generative model is trained in the FL server and broadcast to the clients. Each client then generates augmented representations over the feature space</li>
+<li>FedDF:</li>
+<li>FL server constructs <em>p</em> distinct prototype models, each representing clients with identical model architectures</li>
+<li>Cross-architecture learning is then performed via ensemble distillation</li>
+<li>group knowledge transfer (FedGKT)<ul>
+<li>uses alternating minimization to train small edge models and a large server model through a bidirectional distillation approach</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h3 id="Similarity-Based-Approaches"><a href="#Similarity-Based-Approaches" class="headerlink" title="Similarity-Based Approaches"></a>Similarity-Based Approaches</h3><ol>
+<li><p>Multitask Learning</p>
+<ul>
+<li><p>FedAMP: an attention-based mechanism that enforces stronger pairwise collaboration amongst FL clients with similar data distributions</p>
+<ul>
+<li><p>maintains a personalized cloud model u_c for each client in the server</p>
+</li>
+<li><p>$$<br>u_c &#x3D; \xi_{c,1} \theta_1 + \cdots + \xi_{c,m}\theta_m , \quad \sum_{m \in C} \xi_{c, m} &#x3D; 1<br>$$</p>
+</li>
+<li><p>local loss function:</p>
+<ul>
+<li>$$<br>\theta^*_{c} &#x3D; {\text{arg} \min }_{\theta \in \mathbb{R}^d} f_c(\theta) + \frac{\mu}{2\alpha}| \theta - u_c|^2<br>$$</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>FedCurv:  Parameter importance is estimated using the Fisher information matrix and penalization steps are carried out to preserve important parameters</p>
+</li>
+</ul>
+</li>
+<li><p>Model Interpolation: </p>
+<ul>
+<li>Each FL client learns an individual local model. A penalty parameter <em>λ</em> is used to discourage the local models from being too dissimilar from the mean model</li>
+<li>APFL: finding the optimal combination of global and local models in a communication-efficient manner.</li>
+<li>HeteroFL: trains local models with diverse computational complexities, based on a single-global model</li>
+</ul>
+</li>
+<li><p>Clustering:</p>
+<ul>
+<li><p>the cosine similarity of the gradient updates from the clients is used to divide the FL clients into clusters.</p>
+</li>
+<li><p>iterative federated clustering algorithm (IFCA): </p>
+<ul>
+<li>server constructs K global models and broadcasts these models to all clients for local loss computation. Each client is assigned to one of the K clusters the global model of which achieves the lowest loss value on the client’s data</li>
+</ul>
+</li>
+<li><p>community-based FL (CBFL):</p>
+<ul>
+<li>K-means clustering with a predetermined number of clusters to cluster patients based on the encoded features of their private data</li>
+</ul>
+</li>
+<li><p>FedGroup:</p>
+<ul>
+<li>performs clustering on the local client updates using the K-means++ algorithm based on the Euclidean distance of the decomposed cosine similarity (EDC).</li>
+</ul>
+</li>
+<li><p>multicenter formulation:</p>
+<ul>
+<li><p>loss function:<br>$$<br>l &#x3D; \frac{1}{C} &#x3D; \sum_{k&#x3D;1}^{K}\sum_{c&#x3D;1}^{C} r_c^{(k)} \text{Dist}(\theta_c, \omega^{(k)}), \quad r_c^{(k)} &#x3D; \left{<br>\begin{aligned}<br>0, \quad c \notin \text{cluster}_k\<br>1, \quad c \in \text{cluster}_k\<br>\end{aligned}<br>\right<br>.<br>$$</p>
+</li>
+<li><p>EM algorithm to solve</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h3 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h3><p>![](D:\myblog\pictures\Personalized Federated Learning\summary for strategy2.png)</p>
+<h2 id="PFL-Benchmark-and-Evaluation-Metrics"><a href="#PFL-Benchmark-and-Evaluation-Metrics" class="headerlink" title="PFL Benchmark and Evaluation Metrics"></a>PFL Benchmark and Evaluation Metrics</h2><h3 id="FL-Benchmark-Datasets"><a href="#FL-Benchmark-Datasets" class="headerlink" title="FL Benchmark Datasets"></a>FL Benchmark Datasets</h3><h3 id="PFL-Experimental-Evaluation-Design"><a href="#PFL-Experimental-Evaluation-Design" class="headerlink" title="PFL Experimental Evaluation Design"></a>PFL Experimental Evaluation Design</h3><ol>
+<li><em>Quantity Skew:</em> FL clients hold local datasets of different sizes, with some clients having considerably larger amounts of data than others</li>
+<li><em>Feature Distribution Skew:</em> The feature distribution <em>P*<em>c</em></em>(<strong>x</strong>)* varies across clients, while the conditional distribution <em>P(y</em>|<em>x)</em> is the same across clients.</li>
+<li><em>Label Distribution Skew:</em> The label distribution <em>P*<em>c</em></em>(<strong>y</strong>)* varies across clients, while the conditional distribution <em>P</em><em>(<strong>x*|*y</strong>)</em> is the same across clients.</li>
+<li><em>Label Preference Skew:</em> The conditional distribution <em>P</em> <em>c</em>*(<strong>x*|<em>y)</em> varies across clients, while the label distribution *P</strong>(*<em>y)</em> is the same across clients.</li>
+</ol>
+<h3 id="PFL-Evaluation-Metrics"><a href="#PFL-Evaluation-Metrics" class="headerlink" title="PFL Evaluation Metrics"></a>PFL Evaluation Metrics</h3><ol>
+<li>Model performance can be measured in terms of accuracy and convergence.</li>
+<li>System performance metrics focus on communication efficiency, computational efficiency, system heterogeneity, system scalability, and fault tolerance.</li>
+<li>Trustworthy AI metrics</li>
+</ol>
+<h2 id="Promising-Future-Research-Directions"><a href="#Promising-Future-Research-Directions" class="headerlink" title="Promising Future Research Directions"></a>Promising Future Research Directions</h2><h3 id="Opportunities-for-PFL-Architectural-Design"><a href="#Opportunities-for-PFL-Architectural-Design" class="headerlink" title="Opportunities for PFL Architectural Design"></a>Opportunities for PFL Architectural Design</h3><ol>
+<li>Client Data Heterogeneity Analytics</li>
+<li>Aggregation Procedure</li>
+<li>PFL Architecture Search</li>
+<li>Spatial Adaptability: refers to the ability of PFL systems to handle variations across client datasets</li>
+<li>Temporal Adaptability: refers to the ability of a PFL system to learn from nonstationary data</li>
+</ol>
+<h3 id="Opportunities-for-PFL-Benchmarking"><a href="#Opportunities-for-PFL-Benchmarking" class="headerlink" title="Opportunities for PFL Benchmarking"></a>Opportunities for PFL Benchmarking</h3><ol>
+<li>Realistic Datasets</li>
+<li>Realistic Non-IID Settings</li>
+<li>Holistic Evaluation Metrics</li>
+<li>Opportunities for Trustworthy PFL</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E8%81%94%E9%82%A6%E5%AD%A6%E4%B9%A0/" rel="tag"># 联邦学习</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/11/10/%E5%9F%BA%E4%BA%8Edocker%E5%AE%B9%E5%99%A8%E7%9A%84%E5%89%8D%E5%90%8E%E7%AB%AF%E4%B8%80%E9%94%AE%E9%83%A8%E7%BD%B2/" rel="prev" title="基于docker容器的前后端一键部署">
+      <i class="fa fa-chevron-left"></i> 基于docker容器的前后端一键部署
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Towards-Personalized-Federated-Learning"><span class="nav-number">1.</span> <span class="nav-text">Towards Personalized Federated Learning</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Introduction"><span class="nav-number">1.1.</span> <span class="nav-text">Introduction</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Categorization-of-FL"><span class="nav-number">1.1.1.</span> <span class="nav-text">Categorization of  FL</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Motivation-for-Personalized-Federated-Learning"><span class="nav-number">1.1.2.</span> <span class="nav-text">Motivation for Personalized Federated Learning</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Strategies-for-personalized-federated-learning"><span class="nav-number">1.2.</span> <span class="nav-text">Strategies for personalized federated learning</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Strategy-%E2%85%A0-Global-Model-Personalization"><span class="nav-number">1.2.1.</span> <span class="nav-text">Strategy Ⅰ : Global Model Personalization</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Strategy-%E2%85%A1-Learning-Personalized-Models"><span class="nav-number">1.2.2.</span> <span class="nav-text">Strategy Ⅱ : Learning Personalized Models</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Strategy-%E2%85%A0-Global-Model-Personalization-1"><span class="nav-number">1.3.</span> <span class="nav-text">Strategy Ⅰ:   Global Model Personalization</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Data-Based-Approaches"><span class="nav-number">1.3.1.</span> <span class="nav-text">Data-Based Approaches</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Model-Based-Approaches"><span class="nav-number">1.3.2.</span> <span class="nav-text">Model-Based  Approaches</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Summary-of-Personalization-Techniques-in-Global-Model-Personalization"><span class="nav-number">1.3.3.</span> <span class="nav-text">Summary of Personalization Techniques in Global Model Personalization</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Strategy-II-Learning-Personalized-Models"><span class="nav-number">1.4.</span> <span class="nav-text">Strategy II: Learning Personalized Models</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Architecture-Based-Approaches"><span class="nav-number">1.4.1.</span> <span class="nav-text">Architecture-Based Approaches</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Similarity-Based-Approaches"><span class="nav-number">1.4.2.</span> <span class="nav-text">Similarity-Based Approaches</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Summary"><span class="nav-number">1.4.3.</span> <span class="nav-text">Summary</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#PFL-Benchmark-and-Evaluation-Metrics"><span class="nav-number">1.5.</span> <span class="nav-text">PFL Benchmark and Evaluation Metrics</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#FL-Benchmark-Datasets"><span class="nav-number">1.5.1.</span> <span class="nav-text">FL Benchmark Datasets</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PFL-Experimental-Evaluation-Design"><span class="nav-number">1.5.2.</span> <span class="nav-text">PFL Experimental Evaluation Design</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PFL-Evaluation-Metrics"><span class="nav-number">1.5.3.</span> <span class="nav-text">PFL Evaluation Metrics</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Promising-Future-Research-Directions"><span class="nav-number">1.6.</span> <span class="nav-text">Promising Future Research Directions</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Opportunities-for-PFL-Architectural-Design"><span class="nav-number">1.6.1.</span> <span class="nav-text">Opportunities for PFL Architectural Design</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Opportunities-for-PFL-Benchmarking"><span class="nav-number">1.6.2.</span> <span class="nav-text">Opportunities for PFL Benchmarking</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Zp Zeng"
+      src="https://gips2.baidu.com/it/u=3498797510,1741357035&fm=3039&app=3039&f=JPEG?w=1024&h=1024">
+  <p class="site-author-name" itemprop="name">Zp Zeng</p>
+  <div class="site-description" itemprop="description">HelloWorldMan</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">2</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/epiphanyer" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;epiphanyer" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:aristo.fdu@gmail.com" title="E-Mail → mailto:aristo.fdu@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Zp Zeng</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
+<script type="text/javascript" src="/js/click_love.js"></script>
+
+
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+  <script defer src="/lib/three/three.min.js"></script>
+    <script defer src="true"></script>
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

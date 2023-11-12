@@ -172,6 +172,272 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.hackerzzp.top/2023/11/13/Personalized-Federated-Learning/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gips2.baidu.com/it/u=3498797510,1741357035&fm=3039&app=3039&f=JPEG?w=1024&h=1024">
+      <meta itemprop="name" content="Zp Zeng">
+      <meta itemprop="description" content="HelloWorldMan">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ZpZeng's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/11/13/Personalized-Federated-Learning/" class="post-title-link" itemprop="url">Personalized Federated Learning</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-11-13 00:34:15" itemprop="dateCreated datePublished" datetime="2023-11-13T00:34:15+08:00">2023-11-13</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/AI/" itemprop="url" rel="index"><span itemprop="name">AI</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="Towards-Personalized-Federated-Learning"><a href="#Towards-Personalized-Federated-Learning" class="headerlink" title="Towards Personalized Federated Learning"></a>Towards Personalized Federated Learning</h1><h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><h3 id="Categorization-of-FL"><a href="#Categorization-of-FL" class="headerlink" title="Categorization of  FL"></a>Categorization of  FL</h3><ol>
+<li>HFL: participants share the same feature space but have different data samples</li>
+<li>VFL: participants have overlapping data samples but differ in the feature space</li>
+<li>FTL: participants have little overlap in both the feature space and the sample space</li>
+</ol>
+<h3 id="Motivation-for-Personalized-Federated-Learning"><a href="#Motivation-for-Personalized-Federated-Learning" class="headerlink" title="Motivation for Personalized Federated Learning"></a>Motivation for Personalized Federated Learning</h3><p>To solve two challenges:</p>
+<ol>
+<li>poor convergence on highly heterogeneous data</li>
+</ol>
+<ul>
+<li>client drift on non-IID data</li>
+<li>![](D:\myblog\pictures\Personalized Federated Learning\PFL_clientDrift.png)</li>
+</ul>
+<ol start="2">
+<li>lack of solution personalization</li>
+</ol>
+<ul>
+<li>the single-globally shared model will not generalize well for a local distribution that is very different from the global distribution</li>
+</ul>
+<h2 id="Strategies-for-personalized-federated-learning"><a href="#Strategies-for-personalized-federated-learning" class="headerlink" title="Strategies for personalized federated learning"></a>Strategies for personalized federated learning</h2><h3 id="Strategy-Ⅰ-Global-Model-Personalization"><a href="#Strategy-Ⅰ-Global-Model-Personalization" class="headerlink" title="Strategy Ⅰ : Global Model Personalization"></a>Strategy Ⅰ : Global Model Personalization</h3><p>FL training + local adaption</p>
+<ol>
+<li>follows the general FL training procedure to train a single-global FL model</li>
+<li>personalized through a local adaption involves additional training on each local dataset</li>
+</ol>
+<p>personalization performance directly depends on the generalization performance of global model</p>
+<p>Personalization techniques</p>
+<ol>
+<li>data-based approaches</li>
+</ol>
+<ul>
+<li>reduce the statistical heterogeneity among the clients’ datasets</li>
+</ul>
+<ol start="2">
+<li>model-based approaches</li>
+</ol>
+<ul>
+<li>learn a strong global model for future personalization on individual clients</li>
+</ul>
+<h3 id="Strategy-Ⅱ-Learning-Personalized-Models"><a href="#Strategy-Ⅱ-Learning-Personalized-Models" class="headerlink" title="Strategy Ⅱ : Learning Personalized Models"></a>Strategy Ⅱ : Learning Personalized Models</h3><p>to build personalized models by modifying the FL model aggregation process</p>
+<p>Personalized techniques</p>
+<ol>
+<li>architecture-based approaches</li>
+</ol>
+<ul>
+<li>provide a personalized model architecture tailored to each client</li>
+</ul>
+<ol start="2">
+<li>similarity-based approaches<ul>
+<li>leverage client relationships to improve personalized model performance where similar personalized models are built for related clients.</li>
+</ul>
+</li>
+</ol>
+<p>the optimization objective is formulated differently from the vanilla FL setting</p>
+<h2 id="Strategy-Ⅰ-Global-Model-Personalization-1"><a href="#Strategy-Ⅰ-Global-Model-Personalization-1" class="headerlink" title="Strategy Ⅰ:   Global Model Personalization"></a>Strategy Ⅰ:   Global Model Personalization</h2><h3 id="Data-Based-Approaches"><a href="#Data-Based-Approaches" class="headerlink" title="Data-Based Approaches"></a>Data-Based Approaches</h3><ol>
+<li>Data Augmentation<ul>
+<li>data sharing: distributes a small amount of global data balanced by classes to each client</li>
+<li>FAug: training a GAN in FL server with some data samples of the minority classes</li>
+<li>self-balancing FL: The FL server requires statistical information about clients’ local data distributions</li>
+<li>FedHome: trains a generative convolutional autoencoder (GCAE) model.</li>
+</ul>
+</li>
+<li>Client Selection<ul>
+<li>FAVOR: selects a subset of participating clients for each training round in order to mitigate the bias introduced by non-IID data</li>
+<li>tier-based FL system (TiFL): groups clients into tiers based on training performance, adaptively selects participating clients from the same tier for each training round</li>
+<li>FedSAE: a self-adaptive FL system that adaptively selects clients with larger local training loss</li>
+</ul>
+</li>
+</ol>
+<p>need to modify the local data distributions, which may result in the loss of valuable information associated with the inherent diversity of client behaviors.</p>
+<h3 id="Model-Based-Approaches"><a href="#Model-Based-Approaches" class="headerlink" title="Model-Based  Approaches"></a>Model-Based  Approaches</h3><ol>
+<li><p>Regularized Local Loss:<br>$$<br>\min_{\theta \in \mathbb{R}^d} h_c(\theta ; \omega) \coloneqq f_c(\theta) + l_{reg}(\theta; \omega)<br>$$</p>
+</li>
+<li><p>Between Global and Local Models</p>
+<ul>
+<li>FedProx: introduced a proximal term to the local subproblem which considers the dissimilarity between the global FL model and local models to adjust the impact of local updates</li>
+<li>FedCL: estimate the importance of the weights to the global model, penalization steps are carried out to prevent important parameters of the global model from being changed when adapting the global model to clients’ local data.</li>
+<li>SCAFFOLD: uses variance reduction to alleviate the effect of client drifting,</li>
+</ul>
+</li>
+<li><p>Between Historical Local Model Snapshots</p>
+<ul>
+<li><p>MOON: reduce the distance between the representations learned by the local models and the global model (i.e., to alleviate weight divergence), increase the distance between the representations learned between a given local model and its previous local model (i.e., to speed up convergence).</p>
+</li>
+<li><p>Meta-learning(Per-FedAvg):<br>$$<br>\min_{\omega \in \mathbb{R}^b} F(\omega) \coloneqq \frac{1}{C} \sum_{c&#x3D;1}^{C} f_c(\omega - \alpha \nabla f_c(\omega))<br>$$<br>the new goal is transformed to learn a good initial global model that performs well on a new heterogeneous task after it is updated with a few steps of gradient descent</p>
+</li>
+<li><p>Transfer learning: TL is first carried out using a model pretrained on a public dataset. Each client then fine-tunes this model on its private data.  </p>
+<p>improves personalization by reducing the domain discrepancy between the global and local models.</p>
+</li>
+</ul>
+</li>
+</ol>
+<h3 id="Summary-of-Personalization-Techniques-in-Global-Model-Personalization"><a href="#Summary-of-Personalization-Techniques-in-Global-Model-Personalization" class="headerlink" title="Summary of Personalization Techniques in Global Model Personalization"></a>Summary of Personalization Techniques in Global Model Personalization</h3><p>![](D:\myblog\pictures\Personalized Federated Learning\summary of personalization techniques in Global Model Personalization .png)</p>
+<h2 id="Strategy-II-Learning-Personalized-Models"><a href="#Strategy-II-Learning-Personalized-Models" class="headerlink" title="Strategy II: Learning Personalized Models"></a>Strategy II: Learning Personalized Models</h2><h3 id="Architecture-Based-Approaches"><a href="#Architecture-Based-Approaches" class="headerlink" title="Architecture-Based Approaches"></a>Architecture-Based Approaches</h3><ol>
+<li>Parameter Decoupling<ul>
+<li>decoupling the local private model parameters from the global FL model parameters. Private parameters are trained locally on the clients and not shared with the FL server</li>
+<li>a “base layers + personalized layers” design</li>
+<li>personalized feature representations for each client</li>
+</ul>
+</li>
+<li>Knowledge Distillation<ul>
+<li>Knowledge is commonly represented as class scores or logit outputs in existing FL distillation approaches.</li>
+<li>FedMD: <ul>
+<li>Learning occurs through a consensus computed using the average class scores on a public dataset.</li>
+<li>each client trains its model using the public dataset based on the updated consensus and fine-tunes its model on its private dataset thereafter</li>
+</ul>
+</li>
+<li>FedGen:</li>
+<li>A generative model is trained in the FL server and broadcast to the clients. Each client then generates augmented representations over the feature space</li>
+<li>FedDF:</li>
+<li>FL server constructs <em>p</em> distinct prototype models, each representing clients with identical model architectures</li>
+<li>Cross-architecture learning is then performed via ensemble distillation</li>
+<li>group knowledge transfer (FedGKT)<ul>
+<li>uses alternating minimization to train small edge models and a large server model through a bidirectional distillation approach</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h3 id="Similarity-Based-Approaches"><a href="#Similarity-Based-Approaches" class="headerlink" title="Similarity-Based Approaches"></a>Similarity-Based Approaches</h3><ol>
+<li><p>Multitask Learning</p>
+<ul>
+<li><p>FedAMP: an attention-based mechanism that enforces stronger pairwise collaboration amongst FL clients with similar data distributions</p>
+<ul>
+<li><p>maintains a personalized cloud model u_c for each client in the server</p>
+</li>
+<li><p>$$<br>u_c &#x3D; \xi_{c,1} \theta_1 + \cdots + \xi_{c,m}\theta_m , \quad \sum_{m \in C} \xi_{c, m} &#x3D; 1<br>$$</p>
+</li>
+<li><p>local loss function:</p>
+<ul>
+<li>$$<br>\theta^*_{c} &#x3D; {\text{arg} \min }_{\theta \in \mathbb{R}^d} f_c(\theta) + \frac{\mu}{2\alpha}| \theta - u_c|^2<br>$$</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>FedCurv:  Parameter importance is estimated using the Fisher information matrix and penalization steps are carried out to preserve important parameters</p>
+</li>
+</ul>
+</li>
+<li><p>Model Interpolation: </p>
+<ul>
+<li>Each FL client learns an individual local model. A penalty parameter <em>λ</em> is used to discourage the local models from being too dissimilar from the mean model</li>
+<li>APFL: finding the optimal combination of global and local models in a communication-efficient manner.</li>
+<li>HeteroFL: trains local models with diverse computational complexities, based on a single-global model</li>
+</ul>
+</li>
+<li><p>Clustering:</p>
+<ul>
+<li><p>the cosine similarity of the gradient updates from the clients is used to divide the FL clients into clusters.</p>
+</li>
+<li><p>iterative federated clustering algorithm (IFCA): </p>
+<ul>
+<li>server constructs K global models and broadcasts these models to all clients for local loss computation. Each client is assigned to one of the K clusters the global model of which achieves the lowest loss value on the client’s data</li>
+</ul>
+</li>
+<li><p>community-based FL (CBFL):</p>
+<ul>
+<li>K-means clustering with a predetermined number of clusters to cluster patients based on the encoded features of their private data</li>
+</ul>
+</li>
+<li><p>FedGroup:</p>
+<ul>
+<li>performs clustering on the local client updates using the K-means++ algorithm based on the Euclidean distance of the decomposed cosine similarity (EDC).</li>
+</ul>
+</li>
+<li><p>multicenter formulation:</p>
+<ul>
+<li><p>loss function:<br>$$<br>l &#x3D; \frac{1}{C} &#x3D; \sum_{k&#x3D;1}^{K}\sum_{c&#x3D;1}^{C} r_c^{(k)} \text{Dist}(\theta_c, \omega^{(k)}), \quad r_c^{(k)} &#x3D; \left{<br>\begin{aligned}<br>0, \quad c \notin \text{cluster}_k\<br>1, \quad c \in \text{cluster}_k\<br>\end{aligned}<br>\right<br>.<br>$$</p>
+</li>
+<li><p>EM algorithm to solve</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h3 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h3><p>![](D:\myblog\pictures\Personalized Federated Learning\summary for strategy2.png)</p>
+<h2 id="PFL-Benchmark-and-Evaluation-Metrics"><a href="#PFL-Benchmark-and-Evaluation-Metrics" class="headerlink" title="PFL Benchmark and Evaluation Metrics"></a>PFL Benchmark and Evaluation Metrics</h2><h3 id="FL-Benchmark-Datasets"><a href="#FL-Benchmark-Datasets" class="headerlink" title="FL Benchmark Datasets"></a>FL Benchmark Datasets</h3><h3 id="PFL-Experimental-Evaluation-Design"><a href="#PFL-Experimental-Evaluation-Design" class="headerlink" title="PFL Experimental Evaluation Design"></a>PFL Experimental Evaluation Design</h3><ol>
+<li><em>Quantity Skew:</em> FL clients hold local datasets of different sizes, with some clients having considerably larger amounts of data than others</li>
+<li><em>Feature Distribution Skew:</em> The feature distribution <em>P*<em>c</em></em>(<strong>x</strong>)* varies across clients, while the conditional distribution <em>P(y</em>|<em>x)</em> is the same across clients.</li>
+<li><em>Label Distribution Skew:</em> The label distribution <em>P*<em>c</em></em>(<strong>y</strong>)* varies across clients, while the conditional distribution <em>P</em><em>(<strong>x*|*y</strong>)</em> is the same across clients.</li>
+<li><em>Label Preference Skew:</em> The conditional distribution <em>P</em> <em>c</em>*(<strong>x*|<em>y)</em> varies across clients, while the label distribution *P</strong>(*<em>y)</em> is the same across clients.</li>
+</ol>
+<h3 id="PFL-Evaluation-Metrics"><a href="#PFL-Evaluation-Metrics" class="headerlink" title="PFL Evaluation Metrics"></a>PFL Evaluation Metrics</h3><ol>
+<li>Model performance can be measured in terms of accuracy and convergence.</li>
+<li>System performance metrics focus on communication efficiency, computational efficiency, system heterogeneity, system scalability, and fault tolerance.</li>
+<li>Trustworthy AI metrics</li>
+</ol>
+<h2 id="Promising-Future-Research-Directions"><a href="#Promising-Future-Research-Directions" class="headerlink" title="Promising Future Research Directions"></a>Promising Future Research Directions</h2><h3 id="Opportunities-for-PFL-Architectural-Design"><a href="#Opportunities-for-PFL-Architectural-Design" class="headerlink" title="Opportunities for PFL Architectural Design"></a>Opportunities for PFL Architectural Design</h3><ol>
+<li>Client Data Heterogeneity Analytics</li>
+<li>Aggregation Procedure</li>
+<li>PFL Architecture Search</li>
+<li>Spatial Adaptability: refers to the ability of PFL systems to handle variations across client datasets</li>
+<li>Temporal Adaptability: refers to the ability of a PFL system to learn from nonstationary data</li>
+</ol>
+<h3 id="Opportunities-for-PFL-Benchmarking"><a href="#Opportunities-for-PFL-Benchmarking" class="headerlink" title="Opportunities for PFL Benchmarking"></a>Opportunities for PFL Benchmarking</h3><ol>
+<li>Realistic Datasets</li>
+<li>Realistic Non-IID Settings</li>
+<li>Holistic Evaluation Metrics</li>
+<li>Opportunities for Trustworthy PFL</li>
+</ol>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://www.hackerzzp.top/2023/11/10/%E5%9F%BA%E4%BA%8Edocker%E5%AE%B9%E5%99%A8%E7%9A%84%E5%89%8D%E5%90%8E%E7%AB%AF%E4%B8%80%E9%94%AE%E9%83%A8%E7%BD%B2/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -195,8 +461,9 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
+              
 
-              <time title="创建时间：2023-11-10 15:17:04" itemprop="dateCreated datePublished" datetime="2023-11-10T15:17:04+08:00">2023-11-10</time>
+              <time title="创建时间：2023-11-10 15:17:04 / 修改时间：17:30:58" itemprop="dateCreated datePublished" datetime="2023-11-10T15:17:04+08:00">2023-11-10</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -332,20 +599,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">1</span>
+          <span class="site-state-item-count">2</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-count">2</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-count">2</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
