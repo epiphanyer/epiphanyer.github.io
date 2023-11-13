@@ -74,7 +74,11 @@
   </style>
 </noscript>
 
-</head>
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --></head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
   <div class="container use-motion">
@@ -172,6 +176,87 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.hackerzzp.top/2023/11/13/pytorch-1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gips2.baidu.com/it/u=3498797510,1741357035&fm=3039&app=3039&f=JPEG?w=1024&h=1024">
+      <meta itemprop="name" content="Zp Zeng">
+      <meta itemprop="description" content="HelloWorldMan">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ZpZeng's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/11/13/pytorch-1/" class="post-title-link" itemprop="url">pytorch-1</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2023-11-13 16:37:12 / 修改时间：16:54:54" itemprop="dateCreated datePublished" datetime="2023-11-13T16:37:12+08:00">2023-11-13</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/AI/" itemprop="url" rel="index"><span itemprop="name">AI</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="原地操作"><a href="#原地操作" class="headerlink" title="原地操作"></a>原地操作</h2><ol>
+<li>使用x += x + y或者 x[:] = a + b可以进行原地操作，即操作之后x的内存不会改变</li>
+<li>torch.Tensor.numpy()可以将Tensor对象转变为ndarray，但这两个对象共享底层内存</li>
+</ol>
+<h2 id="数据预处理的一些函数"><a href="#数据预处理的一些函数" class="headerlink" title="数据预处理的一些函数"></a>数据预处理的一些函数</h2><p>pandas</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line">pd.DataFrame.iloc[ , ] </span><br><span class="line"><span class="comment">#DataFrame对象的entry</span></span><br><span class="line">pd.DataFrame.fillna(pd.DataFrame.mean()) </span><br><span class="line"><span class="comment">#该方法用于将DataFrame数值类型的列的缺省值设为平均值</span></span><br><span class="line">pd.ge_dummies(pd.DataFrame, dummy_nan=<span class="literal">True</span>)</span><br><span class="line"><span class="comment">#用于将DataFrame的非数值列转为one-hot向量</span></span><br><span class="line">pd.DataFrame.to_numpy(dtype=<span class="built_in">float</span>)</span><br><span class="line"><span class="comment">#将entry都为数值型的DataFrame转为numpy，后续可转为Tensor</span></span><br></pre></td></tr></table></figure>
+<h2 id="pytorch基本操作"><a href="#pytorch基本操作" class="headerlink" title="pytorch基本操作"></a>pytorch基本操作</h2><p>线性代数</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="comment">#用于返回torch.Tensor对象在各个维度的长度,以下两种方式等价</span></span><br><span class="line">torch.Tensor.size()</span><br><span class="line">torch.Tensor.shape</span><br><span class="line"><span class="comment"># torch.Tensor类对象的一些方法可以指定特定维降维,sum()、mean()等</span></span><br><span class="line">torch.Tensor.<span class="built_in">sum</span>(axis=<span class="number">0</span>)<span class="comment">#在0维的方向上求和，张量的0维度消失</span></span><br><span class="line">torch.Tensor.<span class="built_in">sum</span>(axis=<span class="number">0</span>, keepdims=<span class="literal">True</span>) <span class="comment">#张量的0维度保持，长度变为1</span></span><br><span class="line"><span class="comment"># 矩阵乘法</span></span><br><span class="line">torch.dot(·,·) <span class="comment">#用于两个一维向量点积</span></span><br><span class="line">torch.Tensor.dot(·)</span><br><span class="line">torch.mv() <span class="comment">#用于矩阵向量积,矩阵列维度必须等于向量长度</span></span><br><span class="line">torch.mm() <span class="comment">#用于矩阵乘法</span></span><br></pre></td></tr></table></figure>
+<p>matplotlib.pyplot中的图形对象和子图对象</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line">fig = plt.figure()</span><br><span class="line"><span class="comment"># 图形是顶层容器,管理整个绘图区域，可以有多个子图</span></span><br><span class="line">ax = fig.add_subplot()</span><br><span class="line"><span class="comment"># 添加子图对象</span></span><br><span class="line">ax.plot(y)</span><br><span class="line"><span class="comment"># 在子图上画图,若只指定一个列表，则默认索引位横坐标</span></span><br><span class="line">fig, (ax1, ax2) = plt.subplots(<span class="number">2</span>)</span><br><span class="line"><span class="comment"># 可以同时创建图形和子图对象</span></span><br><span class="line">plt.gca() <span class="comment"># 返回当前正在操作的子图对象</span></span><br></pre></td></tr></table></figure>
+<p>自动微分</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="comment"># 为Tensor对象分配梯度储存空间</span></span><br><span class="line">torch.Tensor.requires_grad_(<span class="literal">True</span>)</span><br><span class="line">torch.arange(<span class="number">4.0</span>, requires_grad=<span class="literal">True</span>)</span><br><span class="line"><span class="comment"># 反向传播</span></span><br><span class="line">y.backward() <span class="comment"># y需要是一个标量</span></span><br><span class="line">y.backward(torch.ones_like(y)) <span class="comment"># 当y是一个张量时,先将y与参数点乘,再做反向传播</span></span><br><span class="line">torch.Tensor.grad <span class="comment"># Tensor类对象中的该属性记录了y关于该Tensor的梯度</span></span><br><span class="line">torch.Tensor.grad.zero_() <span class="comment"># 将梯度值清零</span></span><br><span class="line"><span class="comment"># 分离计算</span></span><br><span class="line">u = y.detach() <span class="comment"># u是一个值为tensor的对象,不参与计算图</span></span><br><span class="line"><span class="comment"># 注意,默认backward()后会清空计算图中间变量(前向传播时生成),可以使用下面的方法保存,以进行多次梯度反向传播</span></span><br><span class="line">y.backward(retain_graph=<span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 构建计算图需要经过python控制流,依然可以得到变量的梯度。</span></span><br></pre></td></tr></table></figure>
+<p>查看pytorch帮助文档</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="built_in">dir</span>(torch.distributons)</span><br><span class="line"><span class="built_in">help</span>(torch.ones)</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://www.hackerzzp.top/2023/11/13/Personalized-Federated-Learning/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -195,8 +280,9 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
+              
 
-              <time title="创建时间：2023-11-13 00:34:15" itemprop="dateCreated datePublished" datetime="2023-11-13T00:34:15+08:00">2023-11-13</time>
+              <time title="创建时间：2023-11-13 00:34:15 / 修改时间：19:03:05" itemprop="dateCreated datePublished" datetime="2023-11-13T00:34:15+08:00">2023-11-13</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -226,18 +312,16 @@
 </ol>
 <h3 id="Motivation-for-Personalized-Federated-Learning"><a href="#Motivation-for-Personalized-Federated-Learning" class="headerlink" title="Motivation for Personalized Federated Learning"></a>Motivation for Personalized Federated Learning</h3><p>To solve two challenges:</p>
 <ol>
-<li>poor convergence on highly heterogeneous data</li>
-</ol>
-<ul>
+<li>poor convergence on highly heterogeneous data<ul>
 <li>client drift on non-IID data</li>
-<li>![](D:\myblog\pictures\Personalized Federated Learning\PFL_clientDrift.png)</li>
+<li><img src="/2023/11/13/Personalized-Federated-Learning/PFL_clientDrift.png" alt></li>
 </ul>
-<ol start="2">
-<li>lack of solution personalization</li>
-</ol>
-<ul>
+</li>
+<li>lack of solution personalization<ul>
 <li>the single-globally shared model will not generalize well for a local distribution that is very different from the global distribution</li>
 </ul>
+</li>
+</ol>
 <h2 id="Strategies-for-personalized-federated-learning"><a href="#Strategies-for-personalized-federated-learning" class="headerlink" title="Strategies for personalized federated learning"></a>Strategies for personalized federated learning</h2><h3 id="Strategy-Ⅰ-Global-Model-Personalization"><a href="#Strategy-Ⅰ-Global-Model-Personalization" class="headerlink" title="Strategy Ⅰ : Global Model Personalization"></a>Strategy Ⅰ : Global Model Personalization</h3><p>FL training + local adaption</p>
 <ol>
 <li>follows the general FL training procedure to train a single-global FL model</li>
@@ -246,26 +330,22 @@
 <p>personalization performance directly depends on the generalization performance of global model</p>
 <p>Personalization techniques</p>
 <ol>
-<li>data-based approaches</li>
-</ol>
-<ul>
+<li>data-based approaches<ul>
 <li>reduce the statistical heterogeneity among the clients’ datasets</li>
 </ul>
-<ol start="2">
-<li>model-based approaches</li>
-</ol>
-<ul>
+</li>
+<li>model-based approaches<ul>
 <li>learn a strong global model for future personalization on individual clients</li>
 </ul>
+</li>
+</ol>
 <h3 id="Strategy-Ⅱ-Learning-Personalized-Models"><a href="#Strategy-Ⅱ-Learning-Personalized-Models" class="headerlink" title="Strategy Ⅱ : Learning Personalized Models"></a>Strategy Ⅱ : Learning Personalized Models</h3><p>to build personalized models by modifying the FL model aggregation process</p>
 <p>Personalized techniques</p>
 <ol>
-<li>architecture-based approaches</li>
-</ol>
-<ul>
+<li>architecture-based approaches<ul>
 <li>provide a personalized model architecture tailored to each client</li>
 </ul>
-<ol start="2">
+</li>
 <li>similarity-based approaches<ul>
 <li>leverage client relationships to improve personalized model performance where similar personalized models are built for related clients.</li>
 </ul>
@@ -277,32 +357,35 @@
 <li>data sharing: distributes a small amount of global data balanced by classes to each client</li>
 <li>FAug: training a GAN in FL server with some data samples of the minority classes</li>
 <li>self-balancing FL: The FL server requires statistical information about clients’ local data distributions</li>
-<li>FedHome: trains a generative convolutional autoencoder (GCAE) model.</li>
+<li>FedHome: trains a generative convolutional autoencoder (GCAE) model. </li>
 </ul>
 </li>
 <li>Client Selection<ul>
 <li>FAVOR: selects a subset of participating clients for each training round in order to mitigate the bias introduced by non-IID data</li>
 <li>tier-based FL system (TiFL): groups clients into tiers based on training performance, adaptively selects participating clients from the same tier for each training round</li>
-<li>FedSAE: a self-adaptive FL system that adaptively selects clients with larger local training loss</li>
+<li>FedSAE: a self-adaptive FL system that adaptively selects clients with larger local training loss </li>
 </ul>
 </li>
 </ol>
 <p>need to modify the local data distributions, which may result in the loss of valuable information associated with the inherent diversity of client behaviors.</p>
 <h3 id="Model-Based-Approaches"><a href="#Model-Based-Approaches" class="headerlink" title="Model-Based  Approaches"></a>Model-Based  Approaches</h3><ol>
-<li><p>Regularized Local Loss:<br>$$<br>\min_{\theta \in \mathbb{R}^d} h_c(\theta ; \omega) \coloneqq f_c(\theta) + l_{reg}(\theta; \omega)<br>$$</p>
-</li>
+<li><p>Regularized Local Loss: </p>
+<script type="math/tex; mode=display">
+\min_{\theta \in \mathbb{R}^d} h_c(\theta ; \omega) \triangleq f_c(\theta) + l_{reg}(\theta; \omega)</script></li>
 <li><p>Between Global and Local Models</p>
 <ul>
 <li>FedProx: introduced a proximal term to the local subproblem which considers the dissimilarity between the global FL model and local models to adjust the impact of local updates</li>
 <li>FedCL: estimate the importance of the weights to the global model, penalization steps are carried out to prevent important parameters of the global model from being changed when adapting the global model to clients’ local data.</li>
-<li>SCAFFOLD: uses variance reduction to alleviate the effect of client drifting,</li>
+<li>SCAFFOLD: uses variance reduction to alleviate the effect of client drifting, </li>
 </ul>
 </li>
 <li><p>Between Historical Local Model Snapshots</p>
 <ul>
 <li><p>MOON: reduce the distance between the representations learned by the local models and the global model (i.e., to alleviate weight divergence), increase the distance between the representations learned between a given local model and its previous local model (i.e., to speed up convergence).</p>
 </li>
-<li><p>Meta-learning(Per-FedAvg):<br>$$<br>\min_{\omega \in \mathbb{R}^b} F(\omega) \coloneqq \frac{1}{C} \sum_{c&#x3D;1}^{C} f_c(\omega - \alpha \nabla f_c(\omega))<br>$$<br>the new goal is transformed to learn a good initial global model that performs well on a new heterogeneous task after it is updated with a few steps of gradient descent</p>
+<li><p>Meta-learning(Per-FedAvg): </p>
+<script type="math/tex; mode=display">
+\min_{\omega \in \mathbb{R}^b} F(\omega) \triangleq \frac{1}{C} \sum_{c=1}^{C} f_c(\omega - \alpha \nabla f_c(\omega))</script><p>the new goal is transformed to learn a good initial global model that performs well on a new heterogeneous task after it is updated with a few steps of gradient descent</p>
 </li>
 <li><p>Transfer learning: TL is first carried out using a model pretrained on a public dataset. Each client then fine-tunes this model on its private data.  </p>
 <p>improves personalization by reducing the domain discrepancy between the global and local models.</p>
@@ -310,12 +393,14 @@
 </ul>
 </li>
 </ol>
-<h3 id="Summary-of-Personalization-Techniques-in-Global-Model-Personalization"><a href="#Summary-of-Personalization-Techniques-in-Global-Model-Personalization" class="headerlink" title="Summary of Personalization Techniques in Global Model Personalization"></a>Summary of Personalization Techniques in Global Model Personalization</h3><p>![](D:\myblog\pictures\Personalized Federated Learning\summary of personalization techniques in Global Model Personalization .png)</p>
+<h3 id="Summary-of-Personalization-Techniques-in-Global-Model-Personalization"><a href="#Summary-of-Personalization-Techniques-in-Global-Model-Personalization" class="headerlink" title="Summary of Personalization Techniques in Global Model Personalization"></a>Summary of Personalization Techniques in Global Model Personalization</h3><p><img src="/2023/11/13/Personalized-Federated-Learning/summary of personalization techniques in Global Model Personalization .png" alt></p>
 <h2 id="Strategy-II-Learning-Personalized-Models"><a href="#Strategy-II-Learning-Personalized-Models" class="headerlink" title="Strategy II: Learning Personalized Models"></a>Strategy II: Learning Personalized Models</h2><h3 id="Architecture-Based-Approaches"><a href="#Architecture-Based-Approaches" class="headerlink" title="Architecture-Based Approaches"></a>Architecture-Based Approaches</h3><ol>
 <li>Parameter Decoupling<ul>
-<li>decoupling the local private model parameters from the global FL model parameters. Private parameters are trained locally on the clients and not shared with the FL server</li>
+<li>decoupling the local private model parameters from the global FL model parameters. Private parameters are trained locally on the clients and not shared with the FL server<ul>
 <li>a “base layers + personalized layers” design</li>
 <li>personalized feature representations for each client</li>
+</ul>
+</li>
 </ul>
 </li>
 <li>Knowledge Distillation<ul>
@@ -325,11 +410,15 @@
 <li>each client trains its model using the public dataset based on the updated consensus and fine-tunes its model on its private dataset thereafter</li>
 </ul>
 </li>
-<li>FedGen:</li>
+<li>FedGen:<ul>
 <li>A generative model is trained in the FL server and broadcast to the clients. Each client then generates augmented representations over the feature space</li>
-<li>FedDF:</li>
+</ul>
+</li>
+<li>FedDF:<ul>
 <li>FL server constructs <em>p</em> distinct prototype models, each representing clients with identical model architectures</li>
 <li>Cross-architecture learning is then performed via ensemble distillation</li>
+</ul>
+</li>
 <li>group knowledge transfer (FedGKT)<ul>
 <li>uses alternating minimization to train small edge models and a large server model through a bidirectional distillation approach</li>
 </ul>
@@ -344,11 +433,12 @@
 <ul>
 <li><p>maintains a personalized cloud model u_c for each client in the server</p>
 </li>
-<li><p>$$<br>u_c &#x3D; \xi_{c,1} \theta_1 + \cdots + \xi_{c,m}\theta_m , \quad \sum_{m \in C} \xi_{c, m} &#x3D; 1<br>$$</p>
-</li>
+<li><script type="math/tex; mode=display">
+u_c = \xi_{c,1} \theta_1 + \cdots + \xi_{c,m}\theta_m , \quad \sum_{m \in C} \xi_{c, m} = 1</script></li>
 <li><p>local loss function:</p>
 <ul>
-<li>$$<br>\theta^*_{c} &#x3D; {\text{arg} \min }_{\theta \in \mathbb{R}^d} f_c(\theta) + \frac{\mu}{2\alpha}| \theta - u_c|^2<br>$$</li>
+<li><script type="math/tex; mode=display">
+\theta^*_{c} = {\text{arg} \min }_{\theta \in \mathbb{R}^d} f_c(\theta) + \frac{\mu}{2\alpha}\| \theta - u_c\|^2</script></li>
 </ul>
 </li>
 </ul>
@@ -385,8 +475,15 @@
 </li>
 <li><p>multicenter formulation:</p>
 <ul>
-<li><p>loss function:<br>$$<br>l &#x3D; \frac{1}{C} &#x3D; \sum_{k&#x3D;1}^{K}\sum_{c&#x3D;1}^{C} r_c^{(k)} \text{Dist}(\theta_c, \omega^{(k)}), \quad r_c^{(k)} &#x3D; \left{<br>\begin{aligned}<br>0, \quad c \notin \text{cluster}_k\<br>1, \quad c \in \text{cluster}_k\<br>\end{aligned}<br>\right<br>.<br>$$</p>
-</li>
+<li><p>loss function: </p>
+<script type="math/tex; mode=display">
+l = \frac{1}{C} = \sum_{k=1}^{K}\sum_{c=1}^{C} r_c^{(k)} \text{Dist}(\theta_c, \omega^{(k)}), \quad r_c^{(k)} = \left\{
+    \begin{aligned}
+    0, \quad c \notin \text{cluster}_k\\
+    1, \quad c \in \text{cluster}_k\\
+    \end{aligned}
+    \right
+    .</script></li>
 <li><p>EM algorithm to solve</p>
 </li>
 </ul>
@@ -394,12 +491,12 @@
 </ul>
 </li>
 </ol>
-<h3 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h3><p>![](D:\myblog\pictures\Personalized Federated Learning\summary for strategy2.png)</p>
+<h3 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h3><p><img src="/2023/11/13/Personalized-Federated-Learning/summary for strategy2.png" alt></p>
 <h2 id="PFL-Benchmark-and-Evaluation-Metrics"><a href="#PFL-Benchmark-and-Evaluation-Metrics" class="headerlink" title="PFL Benchmark and Evaluation Metrics"></a>PFL Benchmark and Evaluation Metrics</h2><h3 id="FL-Benchmark-Datasets"><a href="#FL-Benchmark-Datasets" class="headerlink" title="FL Benchmark Datasets"></a>FL Benchmark Datasets</h3><h3 id="PFL-Experimental-Evaluation-Design"><a href="#PFL-Experimental-Evaluation-Design" class="headerlink" title="PFL Experimental Evaluation Design"></a>PFL Experimental Evaluation Design</h3><ol>
 <li><em>Quantity Skew:</em> FL clients hold local datasets of different sizes, with some clients having considerably larger amounts of data than others</li>
-<li><em>Feature Distribution Skew:</em> The feature distribution <em>P*<em>c</em></em>(<strong>x</strong>)* varies across clients, while the conditional distribution <em>P(y</em>|<em>x)</em> is the same across clients.</li>
-<li><em>Label Distribution Skew:</em> The label distribution <em>P*<em>c</em></em>(<strong>y</strong>)* varies across clients, while the conditional distribution <em>P</em><em>(<strong>x*|*y</strong>)</em> is the same across clients.</li>
-<li><em>Label Preference Skew:</em> The conditional distribution <em>P</em> <em>c</em>*(<strong>x*|<em>y)</em> varies across clients, while the label distribution *P</strong>(*<em>y)</em> is the same across clients.</li>
+<li><em>Feature Distribution Skew:</em> The feature distribution <em>P<strong>c</strong>(<strong>x</strong>)</em> varies across clients, while the conditional distribution <em>P(y</em>|<em>x)</em> is the same across clients.</li>
+<li><em>Label Distribution Skew:</em> The label distribution <em>P<strong>c</strong>(<strong>y</strong>)</em> varies across clients, while the conditional distribution <em>P<strong>(</strong>x</em>|<em>y**)</em> is the same across clients.</li>
+<li><em>Label Preference Skew:</em> The conditional distribution <em>P</em> <em>c<strong>(</strong>x</em>|<em>y)</em> varies across clients, while the label distribution <em>P<strong>(</strong>y)</em> is the same across clients.</li>
 </ol>
 <h3 id="PFL-Evaluation-Metrics"><a href="#PFL-Evaluation-Metrics" class="headerlink" title="PFL Evaluation Metrics"></a>PFL Evaluation Metrics</h3><ol>
 <li>Model performance can be measured in terms of accuracy and convergence.</li>
@@ -488,9 +585,6 @@
       
           <h1 id="基于docker容器进行服务器一键部署"><a href="#基于docker容器进行服务器一键部署" class="headerlink" title="基于docker容器进行服务器一键部署"></a>基于docker容器进行服务器一键部署</h1><p>[TOC]</p>
 <h2 id="项目目录结构"><a href="#项目目录结构" class="headerlink" title="项目目录结构"></a>项目目录结构</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">--rbac_admin (总目录)</span><br><span class="line">	--RBAC-server 后端项目文件夹(基于springboot)</span><br><span class="line">		--...(springboot项目文件)</span><br><span class="line">			注意：pom.xml中配置&lt;repositories&gt;仓库镜像、以及&lt;build&gt;下的&lt;filename&gt;maven编译的jar包名</span><br><span class="line">				/src/main/resources/application.yaml配置中不需要配置数据库源，在docker-compose中配置</span><br><span class="line">		--Dockerfile  docker后端容器镜像配置——Java运行时环境+后端jar包</span><br><span class="line">	--RBAC-web  前端项目文件夹(基于vue)</span><br><span class="line">		--...(vue项目文件)</span><br><span class="line">		--.npmrc 用于配置npm下载包的仓库镜像</span><br><span class="line">		--nginx.conf 用于配置nginx容器: 监听端口、反向代理</span><br><span class="line">		--Dockerfile docker前端容器镜像配置</span><br><span class="line">			——node运行环境+npm run build vue项目 ; =&gt; 生成一个html静态文件</span><br><span class="line">			——nginx镜像，导入了上述html静态文件以及nginx.conf</span><br><span class="line">	--sql  </span><br><span class="line">		--RBAC_database_init.sql 数据库初始化配置文件</span><br><span class="line">	--docker-compose.yml   docker-compose配置文件，运行多容器服务</span><br><span class="line">	--deploy.sh    bash文件，用于服务器自动化部署</span><br></pre></td></tr></table></figure>
-
-
-
 <h2 id="实现一键部署的bash脚本——deploy-sh"><a href="#实现一键部署的bash脚本——deploy-sh" class="headerlink" title="实现一键部署的bash脚本——deploy.sh"></a>实现一键部署的bash脚本——deploy.sh</h2><ol>
 <li><h3 id="bash脚本基础设置"><a href="#bash脚本基础设置" class="headerlink" title="bash脚本基础设置"></a>bash脚本基础设置</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 启动服务</span></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">&quot;开始部署......&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 当任何一个命令返回非零值时，退出脚本</span></span><br><span class="line"><span class="built_in">set</span> -e</span><br><span class="line"></span><br><span class="line"><span class="comment"># 定义颜色</span></span><br><span class="line">RED=<span class="string">&#x27;\033[0;31m&#x27;</span></span><br><span class="line">GREEN=<span class="string">&#x27;\033[0;32m&#x27;</span></span><br><span class="line">NC=<span class="string">&#x27;\033[0m&#x27;</span> <span class="comment"># 无颜色</span></span><br></pre></td></tr></table></figure>
 </li>
@@ -499,23 +593,19 @@
 <li><h3 id="创建maven缓存的docker-volume"><a href="#创建maven缓存的docker-volume" class="headerlink" title="创建maven缓存的docker volume"></a>创建maven缓存的docker volume</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 检查 Maven 缓存 volume 是否已经存在</span></span><br><span class="line"><span class="keyword">if</span> docker volume inspect rbac-maven-repo &amp;&gt; /dev/null; <span class="keyword">then</span></span><br><span class="line">    <span class="built_in">echo</span> -e <span class="string">&quot;<span class="variable">$&#123;GREEN&#125;</span>Maven 缓存 volume 已存在。<span class="variable">$&#123;NC&#125;</span>&quot;</span></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">    <span class="built_in">echo</span> -e <span class="string">&quot;<span class="variable">$&#123;GREEN&#125;</span>创建 Maven 缓存 volume...<span class="variable">$&#123;NC&#125;</span>&quot;</span></span><br><span class="line">    docker volume create --name rbac-maven-repo</span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure>
 </li>
 <li><h3 id="通过容器构建jar包-springboot项目的可运行jar包"><a href="#通过容器构建jar包-springboot项目的可运行jar包" class="headerlink" title="通过容器构建jar包(springboot项目的可运行jar包)"></a>通过容器构建jar包(springboot项目的可运行jar包)</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 通过容器构建 jar 包</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">&quot;开始构建 jar 包...&quot;</span></span><br><span class="line"></span><br><span class="line">docker run -it --<span class="built_in">rm</span> --name rbac-maven \</span><br><span class="line">	<span class="comment">#--rm表示该容器用后即删</span></span><br><span class="line">    -v rbac-maven-repo:/root/.m2 \</span><br><span class="line">    <span class="comment">#-v用于将上面创建的volume挂载到临时maven容器中，使maven缓存能一直存在，不需要每次下载。</span></span><br><span class="line">    -v <span class="string">&quot;<span class="variable">$PWD</span>/RBAC-server&quot;</span>:/usr/src/mymaven \</span><br><span class="line">    <span class="comment">#-v用于将宿主机上的springboot后端服务器源代码挂载到临时maven容器中，进行打包</span></span><br><span class="line">    -w /usr/src/mymaven \</span><br><span class="line">    <span class="comment">#-w指定容器启动时执行的命令的工作目录。</span></span><br><span class="line">    maven:3.8.4-jdk-8 mvn clean install package -e <span class="string">&#x27;-Dmaven.test.skip=true&#x27;</span> || &#123; <span class="built_in">echo</span> -e <span class="string">&quot;<span class="variable">$&#123;RED&#125;</span>构建 jar 包失败。<span class="variable">$&#123;NC&#125;</span>&quot;</span>; <span class="built_in">exit</span> 1; &#125;</span><br><span class="line">    <span class="comment">#maven:3.8.4-jdk-8表示用于构建maven容器的镜像</span></span><br><span class="line">    <span class="comment">#mvn clean install package -e &#x27;-Dmaven.test.skip=true&#x27;代表容器启动时执行的命令，构建jar包(跳过测试)</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">&quot;通过容器构建 jar 包......<span class="variable">$&#123;GREEN&#125;</span>通过<span class="variable">$&#123;NC&#125;</span>&quot;</span></span><br></pre></td></tr></table></figure>
-
 <p>注意，docker -v挂载宿主机目录到容器中之后，两个目录的内容是同步的，所以maven生成的jar包在宿主机的target文件夹下存在。</p>
 </li>
 <li><h3 id="docker-compose-build-构建镜像"><a href="#docker-compose-build-构建镜像" class="headerlink" title="docker-compose build 构建镜像"></a>docker-compose build 构建镜像</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 构建镜像</span></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">&quot;开始构建镜像...&quot;</span></span><br><span class="line">docker-compose build --no-cache || &#123; <span class="built_in">echo</span> -e <span class="string">&quot;<span class="variable">$&#123;RED&#125;</span>构建 Docker 镜像失败。<span class="variable">$&#123;NC&#125;</span>&quot;</span>; <span class="built_in">exit</span> 1; &#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">&quot;构建 Docker 镜像......<span class="variable">$&#123;GREEN&#125;</span>通过<span class="variable">$&#123;NC&#125;</span>&quot;</span></span><br></pre></td></tr></table></figure>
 </li>
 <li><h3 id="检查是否有正在运行的docker-compose服务"><a href="#检查是否有正在运行的docker-compose服务" class="headerlink" title="检查是否有正在运行的docker-compose服务"></a>检查是否有正在运行的docker-compose服务</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 启动服务</span></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">&quot;检查是否有正在运行的服务...&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 检查是否有正在运行的 docker-compose 服务</span></span><br><span class="line"><span class="keyword">if</span> docker-compose ps | grep <span class="string">&quot;ssadmin&quot;</span>; <span class="keyword">then</span></span><br><span class="line">    <span class="built_in">echo</span> -e <span class="string">&quot;<span class="variable">$&#123;GREEN&#125;</span>停止正在运行的服务...<span class="variable">$&#123;NC&#125;</span>&quot;</span></span><br><span class="line">    docker-compose down || &#123; <span class="built_in">echo</span> -e <span class="string">&quot;<span class="variable">$&#123;RED&#125;</span>停止服务失败。<span class="variable">$&#123;NC&#125;</span>&quot;</span>; <span class="built_in">exit</span> 1; &#125;</span><br><span class="line">    <span class="built_in">echo</span> -e <span class="string">&quot;<span class="variable">$&#123;GREEN&#125;</span>服务已成功停止。<span class="variable">$&#123;NC&#125;</span>&quot;</span></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">    <span class="built_in">echo</span> -e <span class="string">&quot;<span class="variable">$&#123;GREEN&#125;</span>没有找到正在运行的服务。<span class="variable">$&#123;NC&#125;</span>&quot;</span></span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure>
 </li>
-<li><h3 id="docker-compose启动多容器服务"><a href="#docker-compose启动多容器服务" class="headerlink" title="docker-compose启动多容器服务"></a>docker-compose启动多容器服务</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> -e <span class="string">&quot;启动新服务...&quot;</span></span><br><span class="line"></span><br><span class="line">docker-compose up -d || &#123; <span class="built_in">echo</span> -e <span class="string">&quot;<span class="variable">$&#123;RED&#125;</span>启动服务失败。<span class="variable">$&#123;NC&#125;</span>&quot;</span>; <span class="built_in">exit</span> 1; &#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">&quot;<span class="variable">$&#123;GREEN&#125;</span>恭喜你！系统部署完成！<span class="variable">$&#123;NC&#125;</span>&quot;</span></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">&quot;&quot;</span></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">&quot;**********************************&quot;</span></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">&quot;***  Admin UI: http://hostname ***&quot;</span></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">&quot;**********************************&quot;</span></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">&quot;&quot;</span></span><br></pre></td></tr></table></figure></li>
+<li><h3 id="docker-compose启动多容器服务"><a href="#docker-compose启动多容器服务" class="headerlink" title="docker-compose启动多容器服务"></a>docker-compose启动多容器服务</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> -e <span class="string">&quot;启动新服务...&quot;</span></span><br><span class="line"></span><br><span class="line">docker-compose up -d || &#123; <span class="built_in">echo</span> -e <span class="string">&quot;<span class="variable">$&#123;RED&#125;</span>启动服务失败。<span class="variable">$&#123;NC&#125;</span>&quot;</span>; <span class="built_in">exit</span> 1; &#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">&quot;<span class="variable">$&#123;GREEN&#125;</span>恭喜你！系统部署完成！<span class="variable">$&#123;NC&#125;</span>&quot;</span></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">&quot;&quot;</span></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">&quot;**********************************&quot;</span></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">&quot;***  Admin UI: http://hostname ***&quot;</span></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">&quot;**********************************&quot;</span></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">&quot;&quot;</span></span><br></pre></td></tr></table></figure>
+</li>
 </ol>
 <h2 id="Docker容器及镜像配置"><a href="#Docker容器及镜像配置" class="headerlink" title="Docker容器及镜像配置"></a>Docker容器及镜像配置</h2><h3 id="后端容器镜像配置——Dockerfile"><a href="#后端容器镜像配置——Dockerfile" class="headerlink" title="后端容器镜像配置——Dockerfile"></a>后端容器镜像配置——Dockerfile</h3><figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">FROM</span> eclipse-temurin:<span class="number">8</span>-jre</span><br><span class="line"><span class="comment">## 指定基础镜像——Java8运行时环境</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> <span class="built_in">mkdir</span> -p /RBAC-server</span></span><br><span class="line"><span class="comment">## RUN用于在镜像构建过程中执行命令，此处在容器内部创建了一个目录</span></span><br><span class="line"><span class="keyword">WORKDIR</span><span class="language-bash"> /RBAC-server</span></span><br><span class="line"><span class="comment">## 设置工作目录</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">COPY</span><span class="language-bash"> ./target/RBAC-admin.jar app.jar</span></span><br><span class="line"><span class="comment">## 将Jar 文件复制到镜像中，此时已经用临时的maven容器编译好了jar文件(在deploy.sh文件中)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">## 设置 TZ 时区</span></span><br><span class="line"><span class="keyword">ENV</span> TZ=Asia/Shanghai</span><br><span class="line"></span><br><span class="line"><span class="comment">## 设置 JAVA_OPTS 环境变量，可通过 docker run -e &quot;JAVA_OPTS=&quot; 进行覆盖，指定JVM参数、系统属性</span></span><br><span class="line"><span class="keyword">ENV</span> JAVA_OPTS=<span class="string">&quot;-Xms512m -Xmx512m -Djava.security.egd=file:/dev/./urandom&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">## 应用程序参数，在利用该镜像构建容器时，该参数可以指定后端容器的数据库源(见下方CMD命令)</span></span><br><span class="line"><span class="keyword">ENV</span> ARGS=<span class="string">&quot;&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">EXPOSE</span> <span class="number">28080</span></span><br><span class="line"><span class="comment">## 容器暴露的接口</span></span><br><span class="line"></span><br><span class="line"><span class="comment">## 用该镜像启动容器时，会执行的指令</span></span><br><span class="line"><span class="keyword">CMD</span><span class="language-bash"> java <span class="variable">$&#123;JAVA_OPTS&#125;</span> -jar app.jar <span class="variable">$ARGS</span></span></span><br></pre></td></tr></table></figure>
-
 <h3 id="前端容器镜像配置——Dockerfile"><a href="#前端容器镜像配置——Dockerfile" class="headerlink" title="前端容器镜像配置——Dockerfile"></a>前端容器镜像配置——Dockerfile</h3><figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## 多阶段构建镜像，最终生成的镜像只包含最终一个阶段的构建结果，不包含之前阶段的镜像——作为临时容器</span></span><br><span class="line"></span><br><span class="line"><span class="comment">## 第一阶段，生成临时容器</span></span><br><span class="line"><span class="keyword">FROM</span> node:<span class="number">16</span>-alpine as build-stage</span><br><span class="line"><span class="comment">## 指定node.js运行环境作为基础镜像，该镜像生成的容器是临时的，用来运行vue项目编译生成html静态文件</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">WORKDIR</span><span class="language-bash"> /admim</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">COPY</span><span class="language-bash"> .npmrc package.json package-lock.json ./</span></span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> npm install --frozen-lockfile</span></span><br><span class="line"><span class="comment">## 用npm安装依赖的包，并锁定包的版本</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">COPY</span><span class="language-bash"> . .</span></span><br><span class="line"><span class="keyword">ARG</span> NODE_ENV=<span class="string">&quot;&quot;</span></span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> <span class="built_in">env</span> <span class="variable">$&#123;NODE_ENV&#125;</span> npm run build</span></span><br><span class="line"><span class="comment">## 编译vue项目</span></span><br><span class="line"></span><br><span class="line"><span class="comment">## 第二阶段，nginx镜像，最终用于运行服务器前端，以及反向代理</span></span><br><span class="line"><span class="comment">## -- nginx --</span></span><br><span class="line"><span class="keyword">FROM</span> nginx:alpine</span><br><span class="line"><span class="comment">## 指定基础镜像</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">ENV</span> TZ=Asia/Shanghai</span><br><span class="line"></span><br><span class="line"><span class="keyword">COPY</span><span class="language-bash"> ./nginx.conf /etc/nginx/conf.d/default.conf</span></span><br><span class="line"><span class="comment">## nginx配置文件复制到容器中</span></span><br><span class="line"><span class="keyword">COPY</span><span class="language-bash"> --from=build-stage /admim/dist /usr/share/nginx/html</span></span><br><span class="line"><span class="comment">## 将前一阶段编译得到的html静态文件复制到容器中</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">EXPOSE</span> <span class="number">80</span></span><br><span class="line"><span class="comment">## 指定容器暴露的接口</span></span><br></pre></td></tr></table></figure>
-
 <h3 id="前端nginx配置文件"><a href="#前端nginx配置文件" class="headerlink" title="前端nginx配置文件"></a>前端nginx配置文件</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">    listen       80 default_server;  ##默认监听宿主机80端口</span><br><span class="line">    server_name  _; ## 重要！！！修改成你的外网 IP/域名</span><br><span class="line"><span class="meta prompt_">	</span></span><br><span class="line"><span class="meta prompt_">	#</span><span class="language-bash"><span class="comment"># 配置gzip压缩</span></span></span><br><span class="line">    gzip on;</span><br><span class="line">    gzip_min_length 1k;     # 设置允许压缩的页面最小字节数</span><br><span class="line">    gzip_buffers 4 16k;     # 用来存储 gzip 的压缩结果</span><br><span class="line">    gzip_http_version 1.1;  # 识别 HTTP 协议版本</span><br><span class="line">    gzip_comp_level 2;      # 设置 gzip 的压缩比 1-9。1 压缩比最小但最快，而 9 相反</span><br><span class="line">    gzip_types text/plain application/x-javascript text/css application/xml application/javascript; # 指定压缩类型</span><br><span class="line">    gzip_proxied any;       # 无论后端服务器的 headers 头返回什么信息，都无条件启用压缩</span><br><span class="line"></span><br><span class="line">    location / &#123; ## 前端项目，访问该服务器默认代理到前端页面</span><br><span class="line">        root   /usr/share/nginx/html/;</span><br><span class="line">        index  index.html index.htm;</span><br><span class="line">        try_files $uri $uri/ /index.html;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    location /api/ &#123; ## 后端项目 - 管理后台，后端项目反向代理，前端通过/api/访问后端</span><br><span class="line">        proxy_pass http://rbac-server:28080/; ## 重要！！！proxy_pass 需要设置为后端项目所在服务器的 IP</span><br><span class="line">        ## 前后端通过docker-compose运行多容器服务，自动在同一网络中，可以用容器名互相访问</span><br><span class="line">        proxy_set_header Host $http_host;</span><br><span class="line">        proxy_set_header X-Real-IP $remote_addr;</span><br><span class="line">        proxy_set_header REMOTE-HOST $remote_addr;</span><br><span class="line">        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <h3 id="docker-compose-yml配置文件"><a href="#docker-compose-yml配置文件" class="headerlink" title="docker-compose.yml配置文件"></a>docker-compose.yml配置文件</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br></pre></td><td class="code"><pre><span class="line">version: &quot;3.4&quot;</span><br><span class="line"></span><br><span class="line">services:</span><br><span class="line">  mysql:</span><br><span class="line">    container_name: rbac-mysql</span><br><span class="line">    image: mysql:8</span><br><span class="line">    ## 使用docker-hub提供的镜像构建数据库容器</span><br><span class="line">    restart: unless-stopped</span><br><span class="line">    tty: true</span><br><span class="line">    ports:</span><br><span class="line">      - &quot;3306:3306&quot;</span><br><span class="line">    environment:</span><br><span class="line">      MYSQL_DATABASE: $&#123;MYSQL_DATABASE:-root&#125;</span><br><span class="line">      MYSQL_ROOT_PASSWORD: $&#123;MYSQL_ROOT_PASSWORD:-zzp123456&#125;</span><br><span class="line">      ## 利用环境变量设置数据库的用户名和密码</span><br><span class="line">    volumes:</span><br><span class="line">      - mysql:/var/lib/mysql/</span><br><span class="line">      - ./sql/RABC_database_init.sql:/docker-entrypoint-initdb.d/ssadmin_init.sql:ro</span><br><span class="line">      ## 将数据库挂载到宿主机，并且把sql初始化文件挂载到数据库容器的初始化目录下</span><br><span class="line">  </span><br><span class="line">  redis:</span><br><span class="line">    container_name: rbac-redis</span><br><span class="line">    image: redis:6-alpine</span><br><span class="line">    restart: unless-stopped</span><br><span class="line">    ports:</span><br><span class="line">      - &quot;6379:6379&quot;</span><br><span class="line">    volumes:</span><br><span class="line">      - redis:/data</span><br><span class="line"></span><br><span class="line">  server:</span><br><span class="line">    container_name: rbac-server</span><br><span class="line">    build:</span><br><span class="line">      context: ./RBAC-server/</span><br><span class="line">      ## 利用build使用Dockerfile文件构建镜像</span><br><span class="line">    image: rbac-server</span><br><span class="line">    ## 为构建的镜像命名，不能有大写字母</span><br><span class="line">    restart: unless-stopped</span><br><span class="line">    ports:</span><br><span class="line">      - &quot;28080:28080&quot;</span><br><span class="line">    environment:</span><br><span class="line">      SPRING_PROFILES_ACTIVE: local</span><br><span class="line">      JAVA_OPTS:</span><br><span class="line">        $&#123;JAVA_OPTS:-</span><br><span class="line">          -Xms512m</span><br><span class="line">          -Xmx512m</span><br><span class="line">          -Djava.security.egd=file:/dev/./urandom</span><br><span class="line">        &#125;</span><br><span class="line">      ARGS:</span><br><span class="line">        --spring.datasource.url=$&#123;DATASOURCE_URL:-jdbc:mysql://rbac-mysql:3306/RABC_database?useSSL=false&amp;serverTimezone=Asia/Shanghai&amp;allowPublicKeyRetrieval=true&amp;nullCatalogMeansCurrent=true&#125;</span><br><span class="line">        --spring.datasource.username=$&#123;DATASOURCE_USERNAME:-root&#125;</span><br><span class="line">        --spring.datasource.password=$&#123;DATASOURCE_PASSWORD:-zzp123456&#125;</span><br><span class="line">        --spring.redis.host=$&#123;REDIS_HOST:-rbac-redis&#125;</span><br><span class="line">        ## 启动容器时利用环境变量传入参数，连接数据库源(和Dockerfile中对应)</span><br><span class="line">        ## 这些参数在Dockerfile中也被定义</span><br><span class="line">    depends_on:</span><br><span class="line">    ## 依赖的容器</span><br><span class="line">      - mysql</span><br><span class="line">      - redis</span><br><span class="line"></span><br><span class="line">  web:</span><br><span class="line">    container_name: rbac-web</span><br><span class="line">    build:</span><br><span class="line">      context: ./RBAC-web</span><br><span class="line">      args:</span><br><span class="line">        NODE_ENV:</span><br><span class="line">          ENV=$&#123;NODE_ENV:-production&#125;</span><br><span class="line">          VUE_APP_TITLE=$&#123;VUE_APP_TITLE:-RBAC管理系统&#125;</span><br><span class="line">    image: rbac-web</span><br><span class="line">    restart: unless-stopped</span><br><span class="line">    ports:</span><br><span class="line">      - &quot;80:80&quot;</span><br><span class="line">    depends_on:</span><br><span class="line">      - server</span><br><span class="line"></span><br><span class="line">volumes:</span><br><span class="line">  mysql:</span><br><span class="line">    driver: local</span><br><span class="line">  redis:</span><br><span class="line">    driver: local</span><br></pre></td></tr></table></figure>
-
 
       
     </div>
@@ -599,7 +689,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">2</span>
+          <span class="site-state-item-count">3</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -612,7 +702,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-count">3</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -709,6 +799,61 @@
 
 
   
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
 
   
 
