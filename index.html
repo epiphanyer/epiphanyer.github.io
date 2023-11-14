@@ -176,6 +176,91 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.hackerzzp.top/2023/11/14/pytorch-2-%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E6%90%AD%E5%BB%BA/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gips2.baidu.com/it/u=3498797510,1741357035&fm=3039&app=3039&f=JPEG?w=1024&h=1024">
+      <meta itemprop="name" content="Zp Zeng">
+      <meta itemprop="description" content="HelloWorldMan">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ZpZeng's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/11/14/pytorch-2-%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E6%90%AD%E5%BB%BA/" class="post-title-link" itemprop="url">pytorch-2 神经网络搭建</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2023-11-14 09:17:05 / 修改时间：09:18:16" itemprop="dateCreated datePublished" datetime="2023-11-14T09:17:05+08:00">2023-11-14</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/AI/" itemprop="url" rel="index"><span itemprop="name">AI</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>本文梳理利用pytorch实现神经网络的具体流程。</p>
+<h2 id="读取数据集"><a href="#读取数据集" class="headerlink" title="读取数据集"></a>读取数据集</h2><h3 id="torch-utils-data-TensorDataset"><a href="#torch-utils-data-TensorDataset" class="headerlink" title="torch.utils.data.TensorDataset()"></a>torch.utils.data.TensorDataset()</h3><p>这个函数将多个张量作为输入，将它们按dim=0维度打包成为一个数据集对象，即把每个样本的特征和标签打包到一起。因此要求输入的各个张量的dim=0维度长度相同。返回一个torch.utils.data.Dataset类的对象。</p>
+<h3 id="torch-utils-data-Dataset"><a href="#torch-utils-data-Dataset" class="headerlink" title="torch.utils.data.Dataset"></a>torch.utils.data.Dataset</h3><p>同样，也可以继承Dataset类形成自己的My_Dataset类。需要实现以下两个方法：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> torch.utils.data <span class="keyword">import</span> Dataset</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">My_Dataset</span>(<span class="title class_ inherited__">Dataset</span>):</span><br><span class="line">	<span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self,...</span>): </span><br><span class="line">        ...</span><br><span class="line">        <span class="comment"># 注意,在初始化中，可以进行对数据的处理,如:预处理和数据转换等</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__len__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="comment"># 返回数据集的长度</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__getitem__</span>(<span class="params">self, index</span>):</span><br><span class="line">        <span class="comment"># 返回索引对应的样本数据</span></span><br></pre></td></tr></table></figure>
+<h3 id="torch-utils-data-DataLoader"><a href="#torch-utils-data-DataLoader" class="headerlink" title="torch.utils.data.DataLoader()"></a>torch.utils.data.DataLoader()</h3><p>这个函数可以实现按批次的高效率迭代器：批量加载数据、数据洗牌、通过num_workers支持多线程加载数据、通过torchvision.transforms提供数据预处理以及转换。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">from</span> torch.utils <span class="keyword">import</span> data</span><br><span class="line"></span><br><span class="line"><span class="comment"># 假设已经有features, labels数据集代表样本的特征和标签,注意它们的dim=0维度上的长度是一样的,代表样本数量</span></span><br><span class="line">dataset = data.TensorDataset(*(features, labels))</span><br><span class="line">data_iter = data.DataLoader(dataset, batch_size, shuffle=is_train)</span><br><span class="line"><span class="built_in">next</span>(<span class="built_in">iter</span>(data_iter))</span><br></pre></td></tr></table></figure>
+<h2 id="定义模型"><a href="#定义模型" class="headerlink" title="定义模型"></a>定义模型</h2><h3 id="torch-nn-Sequential"><a href="#torch-nn-Sequential" class="headerlink" title="torch.nn.Sequential"></a>torch.nn.Sequential</h3><p>Sequential类可以用于实现一个神经网络模型，它将多个层串联在一起以实现深层网络net(model)。</p>
+<p>可以通过索引选取Sequential对象中的某一层网络。</p>
+<p>当然，也可以通过继承<strong>torch.nn.Module实现一个网络类</strong>。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch.nn <span class="keyword">as</span> nn</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">My_Model</span>(nn.Module):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="built_in">super</span>(Model, self).__init__()</span><br><span class="line">        <span class="comment"># 在此实现该模型中需要用到的层的定义</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, x</span>):</span><br><span class="line">        <span class="comment"># 利用上面实现的层搭建神经网络，通过实现前向传播定义网络。</span></span><br></pre></td></tr></table></figure>
+<h2 id="初始化模型参数"><a href="#初始化模型参数" class="headerlink" title="初始化模型参数"></a>初始化模型参数</h2><p>通过Sequential定义的模型，可以通过索引选取某一层，通过isinstance()判断是哪一种nn层的实例，通过torch.nn.init选取合适的方法初始化。</p>
+<p>通过继承nn.Module自定义网络模型，可以在__init__()函数中利用torch.nn.init定义初始化模型参数的策略。</p>
+<h2 id="定义损失函数"><a href="#定义损失函数" class="headerlink" title="定义损失函数"></a>定义损失函数</h2><p>使用torch.nn中自带的神经网络损失函数，如：均方损失、交叉熵损失等</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch.nn <span class="keyword">as</span> nn</span><br><span class="line">loss = nn.MSELoss()</span><br><span class="line"><span class="comment"># 输入标签的预测值和真实值，返回损失函数</span></span><br></pre></td></tr></table></figure>
+<h2 id="定义优化器"><a href="#定义优化器" class="headerlink" title="定义优化器"></a>定义优化器</h2><p>利用torch.optim中提供的优化函数。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line">optimer = torch.optim.SGD(net.parameters(), lr=<span class="number">0.03</span>)</span><br><span class="line"><span class="comment"># 该函数以模型参数和学习步长作为输入，通过optimer.zero_grad()和optimer.step()来清零原梯度，并做一次梯度下降步骤</span></span><br></pre></td></tr></table></figure>
+<h2 id="训练"><a href="#训练" class="headerlink" title="训练"></a>训练</h2><p>epochs控制训练轮次。batch_size控制批量大小，在dataLoader中实现。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> epoch <span class="keyword">in</span> <span class="built_in">range</span>(epochs):</span><br><span class="line">    <span class="keyword">for</span> X, y <span class="keyword">in</span> data_iter:</span><br><span class="line">        l = loss(net(X), y)</span><br><span class="line">        <span class="comment"># 计算在该批量上的损失</span></span><br><span class="line">        optimer.zero_grad()</span><br><span class="line">        <span class="comment"># 使用优化器将网络参数的梯度归零</span></span><br><span class="line">        l.backward()</span><br><span class="line">        <span class="comment"># 损失函数上反向传播</span></span><br><span class="line">        optimer.step()</span><br><span class="line">        <span class="comment"># 使用优化器在网络参数上做一次梯度下降步骤</span></span><br><span class="line">    l = loss(net(features), labels)</span><br><span class="line">    <span class="comment"># 在每个epoch后计算一次当前模型在整个数据样本集上的损失</span></span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://www.hackerzzp.top/2023/11/13/pytorch-1/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -199,10 +284,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2023-11-13 16:37:12 / 修改时间：16:54:54" itemprop="dateCreated datePublished" datetime="2023-11-13T16:37:12+08:00">2023-11-13</time>
+              <time title="创建时间：2023-11-13 16:37:12" itemprop="dateCreated datePublished" datetime="2023-11-13T16:37:12+08:00">2023-11-13</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-11-14 00:00:27" itemprop="dateModified" datetime="2023-11-14T00:00:27+08:00">2023-11-14</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -227,6 +318,7 @@
           <h2 id="原地操作"><a href="#原地操作" class="headerlink" title="原地操作"></a>原地操作</h2><ol>
 <li>使用x += x + y或者 x[:] = a + b可以进行原地操作，即操作之后x的内存不会改变</li>
 <li>torch.Tensor.numpy()可以将Tensor对象转变为ndarray，但这两个对象共享底层内存</li>
+<li>torch.Tensor对象有些以下划线结尾的函数实现原地操作，如：normal_()、fill_()等。</li>
 </ol>
 <h2 id="数据预处理的一些函数"><a href="#数据预处理的一些函数" class="headerlink" title="数据预处理的一些函数"></a>数据预处理的一些函数</h2><p>pandas</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line">pd.DataFrame.iloc[ , ] </span><br><span class="line"><span class="comment">#DataFrame对象的entry</span></span><br><span class="line">pd.DataFrame.fillna(pd.DataFrame.mean()) </span><br><span class="line"><span class="comment">#该方法用于将DataFrame数值类型的列的缺省值设为平均值</span></span><br><span class="line">pd.ge_dummies(pd.DataFrame, dummy_nan=<span class="literal">True</span>)</span><br><span class="line"><span class="comment">#用于将DataFrame的非数值列转为one-hot向量</span></span><br><span class="line">pd.DataFrame.to_numpy(dtype=<span class="built_in">float</span>)</span><br><span class="line"><span class="comment">#将entry都为数值型的DataFrame转为numpy，后续可转为Tensor</span></span><br></pre></td></tr></table></figure>
@@ -280,10 +372,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2023-11-13 00:34:15 / 修改时间：19:03:05" itemprop="dateCreated datePublished" datetime="2023-11-13T00:34:15+08:00">2023-11-13</time>
+              <time title="创建时间：2023-11-13 00:34:15" itemprop="dateCreated datePublished" datetime="2023-11-13T00:34:15+08:00">2023-11-13</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-11-14 09:22:53" itemprop="dateModified" datetime="2023-11-14T09:22:53+08:00">2023-11-14</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -494,9 +592,9 @@ l = \frac{1}{C} = \sum_{k=1}^{K}\sum_{c=1}^{C} r_c^{(k)} \text{Dist}(\theta_c, \
 <h3 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h3><p><img src="/2023/11/13/Personalized-Federated-Learning/summary for strategy2.png" alt></p>
 <h2 id="PFL-Benchmark-and-Evaluation-Metrics"><a href="#PFL-Benchmark-and-Evaluation-Metrics" class="headerlink" title="PFL Benchmark and Evaluation Metrics"></a>PFL Benchmark and Evaluation Metrics</h2><h3 id="FL-Benchmark-Datasets"><a href="#FL-Benchmark-Datasets" class="headerlink" title="FL Benchmark Datasets"></a>FL Benchmark Datasets</h3><h3 id="PFL-Experimental-Evaluation-Design"><a href="#PFL-Experimental-Evaluation-Design" class="headerlink" title="PFL Experimental Evaluation Design"></a>PFL Experimental Evaluation Design</h3><ol>
 <li><em>Quantity Skew:</em> FL clients hold local datasets of different sizes, with some clients having considerably larger amounts of data than others</li>
-<li><em>Feature Distribution Skew:</em> The feature distribution <em>P<strong>c</strong>(<strong>x</strong>)</em> varies across clients, while the conditional distribution <em>P(y</em>|<em>x)</em> is the same across clients.</li>
-<li><em>Label Distribution Skew:</em> The label distribution <em>P<strong>c</strong>(<strong>y</strong>)</em> varies across clients, while the conditional distribution <em>P<strong>(</strong>x</em>|<em>y**)</em> is the same across clients.</li>
-<li><em>Label Preference Skew:</em> The conditional distribution <em>P</em> <em>c<strong>(</strong>x</em>|<em>y)</em> varies across clients, while the label distribution <em>P<strong>(</strong>y)</em> is the same across clients.</li>
+<li><em>Feature Distribution Skew:</em> The feature distribution Pc(x) varies across clients, while the conditional distribution P(y|x) is the same across clients.</li>
+<li><em>Label Distribution Skew:</em> The label distribution Pc(y) varies across clients, while the conditional distribution P(x|y) is the same across clients.</li>
+<li><em>Label Preference Skew:</em> The conditional distribution Pc(x<em>|</em>y) varies across clients, while the label distribution P(y) is the same across clients.</li>
 </ol>
 <h3 id="PFL-Evaluation-Metrics"><a href="#PFL-Evaluation-Metrics" class="headerlink" title="PFL Evaluation Metrics"></a>PFL Evaluation Metrics</h3><ol>
 <li>Model performance can be measured in terms of accuracy and convergence.</li>
@@ -689,7 +787,7 @@ l = \frac{1}{C} = \sum_{k=1}^{K}\sum_{c=1}^{C} r_c^{(k)} \text{Dist}(\theta_c, \
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">3</span>
+          <span class="site-state-item-count">4</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
